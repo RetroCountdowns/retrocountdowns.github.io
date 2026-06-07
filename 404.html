@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>503 - Service Unavailable</title>
+
+<style>
+body{
+    margin:0;
+    background:#000;
+    color:#00ff00;
+    font-family:"Courier New", monospace;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    overflow:hidden;
+}
+
+.container{
+    text-align:center;
+    padding:30px;
+    border:2px solid #00ff00;
+    box-shadow:0 0 20px #00ff00;
+    animation:flicker 2s infinite;
+}
+
+h1{
+    font-size:72px;
+    margin:0;
+    text-shadow:0 0 15px #00ff00;
+}
+
+h2{
+    margin:10px 0 20px;
+    font-size:32px;
+}
+
+p{
+    font-size:18px;
+}
+
+.blink{
+    animation:blink 1s infinite;
+}
+
+@keyframes blink{
+    50%{opacity:0;}
+}
+
+@keyframes flicker{
+    0%,100%{opacity:1;}
+    5%{opacity:0.9;}
+    10%{opacity:1;}
+    15%{opacity:0.95;}
+    20%{opacity:1;}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>503</h1>
+    <h2>Service Unavailable</h2>
+    <p>retrocountdowns.github.io</p>
+    <p></p>
+    <p class="blink">_</p>
+</div>
+
+</body>
+</html>
