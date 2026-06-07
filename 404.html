@@ -68,5 +68,23 @@ p{
     <p class="blink">_</p>
 </div>
 
+    <script>
+let time = 10;
+const countdown = document.getElementById("countdown");
+
+const timer = setInterval(() => {
+    time--;
+    countdown.textContent = time;
+
+    if(time <= 0){
+        clearInterval(timer);
+        window.location.href = "https://retrocountdownsgithub.io/";
+        // lub:
+        // window.location.href = "https://retrocountdowns.github.io/";
+    }
+}, 1000);
+</script>
+
+
 </body>
 </html>
