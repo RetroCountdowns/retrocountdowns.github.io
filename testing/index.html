@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RetroCountdown</title>
+  <link rel="icon" href="/files/icon.jpg" />
+  <meta name="description" content="RetroCountdown — create anything at any time" />
+
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --surface:#ffffff;
+      --muted:#6b7280;
+      --text:#0f172a;
+      --accent-1:#6b8cff;
+      --accent-2:#ff6b6b;
+      --radius:14px;
+      --shadow-1: 0 6px 20px rgba(15,23,42,0.06);
+      --shadow-2: 0 20px 60px rgba(15,23,42,0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#fbfdff 0%, var(--bg) 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:18px 28px;
+      position:sticky;
+      top:0;
+      z-index:40;
+      background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+      backdrop-filter: blur(8px);
+      border-bottom:1px solid rgba(10,20,40,0.03);
+    }
+    .container{max-width:1200px;margin:0 auto;width:100%}
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      text-decoration:none;
+      color:inherit;
+    }
+    .brand img{
+      width:44px;height:44px;border-radius:10px;object-fit:cover;
+      box-shadow:var(--shadow-1);border:1px solid rgba(0,0,0,0.04);
+    }
+    .brand .title{font-size:18px;font-weight:700;line-height:1}
+    .brand .tag{font-size:12px;color:var(--muted);margin-top:2px}
+
+    .nav{
+      display:flex;
+      align-items:center;
+      gap:18px;
+    }
+    .nav a{
+      color:var(--muted);
+      text-decoration:none;
+      font-weight:600;
+      padding:8px 10px;
+      border-radius:10px;
+      transition:background .15s, color .15s, transform .12s;
+    }
+    .nav a:hover{background:rgba(107,140,255,0.06); color:var(--accent-1); transform:translateY(-1px)}
+
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;
+      font-weight:700;color:white;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
+      border:none;cursor:pointer;box-shadow:0 10px 30px rgba(107,140,255,0.12);
+      text-decoration:none;
+    }
+    .btn.ghost{
+      background:transparent;color:var(--accent-1);border:1px solid rgba(107,140,255,0.12);box-shadow:none;
+    }
+
+    .hero{
+      padding:72px 20px 48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .hero-card{
+      width:100%;
+      max-width:1200px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.9), var(--surface));
+      border-radius:20px;
+      padding:40px;
+      box-shadow:var(--shadow-2);
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:32px;
+      align-items:center;
+      overflow:hidden;
+    }
+
+    .hero-left h1{
+      margin:0 0 12px 0;
+      font-size:40px;
+      line-height:1.02;
+      letter-spacing:-0.6px;
+    }
+    .hero-left p.lead{
+      margin:0 0 22px 0;color:var(--muted);font-size:16px;
+    }
+    .hero-ctas{display:flex;gap:12px;align-items:center}
+
+    .badges{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+    .badge{
+      background:linear-gradient(90deg, rgba(107,140,255,0.06), rgba(255,107,107,0.03));
+      color:var(--accent-1);
+      padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px;
+      box-shadow:0 8px 30px rgba(107,140,255,0.04);
+    }
+
+    .preview{
+      display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;
+    }
+    .screen{
+      width:100%;max-width:380px;height:260px;border-radius:14px;background:
+      linear-gradient(135deg,#fff,#f7fbff);box-shadow:var(--shadow-2);border:1px solid rgba(10,20,40,0.03);
+      padding:18px;display:flex;flex-direction:column;gap:10px;justify-content:center;align-items:center;
+      position:relative;overflow:hidden;
+    }
+    .countdown{
+      display:flex;gap:10px;
+    }
+    .countdown .unit{
+      background:linear-gradient(180deg,#fff,#eef4ff);
+      padding:12px 16px;border-radius:10px;font-weight:800;color:var(--text);
+      box-shadow:0 8px 20px rgba(10,20,40,0.04);min-width:64px;text-align:center;font-size:20px;
+    }
+
+    .features{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px;
+    }
+    .feature{
+      background:linear-gradient(180deg,#fff,#fbfdff);padding:18px;border-radius:12px;
+      box-shadow:var(--shadow-1);border:1px solid rgba(10,20,40,0.03);
+    }
+    .feature h4{margin:0 0 8px 0;font-size:16px}
+    .feature p{margin:0;color:var(--muted);font-size:14px}
+
+    footer{
+      margin-top:auto;padding:28px 20px;background:transparent;border-top:1px solid rgba(10,20,40,0.03);
+    }
+    .footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .muted{color:var(--muted)}
+
+    /* Modal */
+    .modal-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(8,12,20,0.36);z-index:60;padding:20px}
+    .modal{width:100%;max-width:520px;background:var(--surface);border-radius:12px;padding:20px;box-shadow:0 30px 80px rgba(10,20,40,0.18)}
+    .tabs{display:flex;gap:8px;margin-bottom:12px}
+    .tab{flex:1;padding:10px;border-radius:10px;text-align:center;cursor:pointer;font-weight:700}
+    .tab.active{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:white}
+    .form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+    input[type="email"], input[type="password"], input[type="date"], input[type="text"]{padding:12px 14px;border-radius:10px;border:1px solid rgba(10,20,40,0.06);background:linear-gradient(180deg,#fff,#fbfdff);outline:none;font-size:14px}
+
+    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+
+    @media (max-width:980px){
+      .hero-card{grid-template-columns:1fr; padding:28px}
+      .features{grid-template-columns:repeat(2,1fr)}
+      .nav{display:none}
+    }
+    @media (max-width:640px){
+      .features{grid-template-columns:1fr}
+      .brand .title{font-size:16px}
+      .hero-left h1{font-size:28px}
+    }
+
+    .fade-in{animation:fadeInUp .6s ease both}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .pulse{animation:pulse 3s ease-in-out infinite}
+    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+  </style>
+</head>
+<body>
+  <header class="topbar" role="banner">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+      <a class="brand" href="/" aria-label="RetroCountdown home">
+        <img src="/files/icon.jpg" alt="RetroCountdown icon" />
+        <div>
+          <div class="title">RetroCountdown</div>
+          <div class="tag">Light theme • Timeless UI</div>
+        </div>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="/features">Features</a>
+        <a href="/examples">Examples</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/create">Create</a>
+        <button id="loginBtn" class="btn" aria-haspopup="dialog">Login / Register</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="hero" role="main">
+    <div class="hero-card fade-in container" aria-labelledby="hero-title">
+      <div class="hero-left">
+        <div class="kicker badge">Retro style • Modern tools</div>
+        <h1 id="hero-title">Create anything at any time</h1>
+        <p class="lead">Build retro-inspired countdowns, timers and widgets with instant sharing and simple customization. Start for free and scale as you need.</p>
+
+        <div class="hero-ctas">
+          <a class="btn" href="/create" role="button">Get Started</a>
+          <a class="btn ghost" href="/demo">Live Demo</a>
+        </div>
+
+        <div class="badges" aria-hidden="true">
+          <div class="badge">No credit card</div>
+          <div class="badge">Shareable links</div>
+          <div class="badge">Custom themes</div>
+        </div>
+
+        <div id="features" class="features" style="margin-top:28px">
+          <div class="feature">
+            <h4>Instant previews</h4>
+            <p>See changes live as you design — responsive previews for desktop and mobile.</p>
+          </div>
+          <div class="feature">
+            <h4>Share and embed</h4>
+            <p>Copy a link or embed your countdown on any site with a single snippet.</p>
+          </div>
+          <div class="feature">
+            <h4>Secure accounts</h4>
+            <p>Sign up quickly and keep your projects private or public as you choose.</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="preview" aria-hidden="false">
+        <div class="screen pulse" role="img" aria-label="Preview of RetroCountdown">
+          <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:8px">
+            <div style="font-weight:800;color:var(--muted)">RetroCountdown</div>
+            <div style="font-size:12px;color:var(--muted)">Live preview</div>
+          </div>
+
+          <div class="countdown" aria-hidden="true">
+            <div class="unit">12</div>
+            <div class="unit">08</div>
+            <div class="unit">34</div>
+            <div class="unit">56</div>
+          </div>
+
+          <div style="margin-top:12px;color:var(--muted);font-size:13px">Simple, shareable, and customizable</div>
+        </div>
+
+        <div style="display:flex;gap:10px;width:100%;justify-content:center">
+          <a class="btn ghost" href="/preview/mobile">Mobile</a>
+          <a class="btn ghost" href="/preview/desktop">Desktop</a>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner container">
+      <div class="muted">© 2024 - <span id="currentYear">2024</span> RetroCountdowns</div>
+      <div class="muted">Made with care • Light theme</div>
+    </div>
+  </footer>
+
+  <!-- Modal for Login / Register with username + birthdate in Register -->
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="modalTitle">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h3 id="modalTitle" style="margin:0">Account</h3>
+        <button id="closeModal" class="btn ghost" type="button">Close</button>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Auth tabs">
+        <div id="tabLogin" class="tab active" role="tab" aria-selected="true" tabindex="0">Login</div>
+        <div id="tabRegister" class="tab" role="tab" aria-selected="false" tabindex="0">Register</div>
+      </div>
+
+      <div id="authStatus" class="muted" style="margin-bottom:8px">Sign in or create an account</div>
+
+      <!-- Login form -->
+      <form id="loginForm" style="display:block" autocomplete="on">
+        <div class="form-row">
+          <label class="small">Email</label>
+          <input id="loginEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+        </div>
+
+        <div class="form-row">
+          <label class="small">Password</label>
+          <input id="loginPassword" name="password" type="password" placeholder="Your password" autocomplete="current-password" required />
+        </div>
+
+        <div class="actions">
+          <a class="btn ghost" href="/forgot-password">Forgot?</a>
+          <button id="signinBtn" class="btn" type="button">Login</button>
+        </div>
+      </form>
+
+      <!-- Register form (includes username + birthdate) -->
+      <form id="registerForm" style="display:none" autocomplete="on">
+        <div class="form-row">
+          <label class="small">Username</label>
+          <input id="regUsername" name="username" type="text" placeholder="yourname" autocomplete="username" required />
+        </div>
+
+        <div class="form-row">
+          <label class="small">Email</label>
+          <input id="regEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+        </div>
+
+        <div class="form-row">
+          <label class="small">Password</label>
+          <input id="regPassword" name="password" type="password" placeholder="Choose a secure password" autocomplete="new-password" required />
+        </div>
+
+        <div class="form-row">
+          <label class="small">Birthdate</label>
+          <input id="regBirthdate" name="birthdate" type="date" max="" />
+        </div>
+
+        <div class="actions">
+          <button id="registerBtn" class="btn" type="button">Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase initialization and Auth + Firestore logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7bEfHo9L7qM9HDivs6dA4yCiqXQF3DXo",
+      authDomain: "retrocountdowns-30d73.firebaseapp.com",
+      projectId: "retrocountdowns-30d73",
+      storageBucket: "retrocountdowns-30d73.firebasestorage.app",
+      messagingSenderId: "259195261216",
+      appId: "1:259195261216:web:68d1d507ace6ee3f144745"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Elements
+    const loginBtn = document.getElementById('loginBtn');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const closeModal = document.getElementById('closeModal');
+    const tabLogin = document.getElementById('tabLogin');
+    const tabRegister = document.getElementById('tabRegister');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const authStatus = document.getElementById('authStatus');
+
+    const loginEmail = document.getElementById('loginEmail');
+    const loginPassword = document.getElementById('loginPassword');
+    const signinBtn = document.getElementById('signinBtn');
+
+    const regUsername = document.getElementById('regUsername');
+    const regEmail = document.getElementById('regEmail');
+    const regPassword = document.getElementById('regPassword');
+    const regBirthdate = document.getElementById('regBirthdate');
+    const registerBtn = document.getElementById('registerBtn');
+
+    // Set max birthdate to today (prevents future dates)
+    regBirthdate.max = new Date().toISOString().split('T')[0];
+
+    // Modal open/close
+    function openModal(defaultTab = 'login'){
+      modalBackdrop.style.display = 'flex';
+      modalBackdrop.setAttribute('aria-hidden','false');
+      if(defaultTab === 'register') switchToRegister();
+      else switchToLogin();
+      setTimeout(() => {
+        const activeInput = (defaultTab === 'register') ? regUsername : loginEmail;
+        activeInput && activeInput.focus();
+      }, 80);
+    }
+    function hideModal(){
+      modalBackdrop.style.display = 'none';
+      modalBackdrop.setAttribute('aria-hidden','true');
+      authStatus.textContent = 'Sign in or create an account';
+      authStatus.style.color = '';
+    }
+
+    loginBtn.addEventListener('click', () => openModal('login'));
+    closeModal.addEventListener('click', hideModal);
+    modalBackdrop.addEventListener('click', (e) => { if(e.target === modalBackdrop) hideModal(); });
+    window.addEventListener('keydown', (e) => { if(e.key === 'Escape') hideModal(); });
+
+    // Tab switching
+    function switchToLogin(){
+      tabLogin.classList.add('active');
+      tabRegister.classList.remove('active');
+      tabLogin.setAttribute('aria-selected','true');
+      tabRegister.setAttribute('aria-selected','false');
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+    }
+    function switchToRegister(){
+      tabRegister.classList.add('active');
+      tabLogin.classList.remove('active');
+      tabRegister.setAttribute('aria-selected','true');
+      tabLogin.setAttribute('aria-selected','false');
+      registerForm.style.display = 'block';
+      loginForm.style.display = 'none';
+    }
+
+    tabLogin.addEventListener('click', switchToLogin);
+    tabRegister.addEventListener('click', switchToRegister);
+    tabLogin.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') switchToLogin(); });
+    tabRegister.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') switchToRegister(); });
+
+    // Helpers
+    function showMessage(msg, isError = false){
+      authStatus.textContent = msg;
+      authStatus.style.color = isError ? '#b91c1c' : '';
+    }
+
+    // Login flow
+    signinBtn.addEventListener('click', async () => {
+      const email = loginEmail.value.trim();
+      const password = loginPassword.value;
+      if(!email || !password){ showMessage('Please provide email and password', true); return; }
+      showMessage('Signing in...');
+      try{
+        await signInWithEmailAndPassword(auth, email, password);
+        showMessage('Signed in. Redirecting...');
+        window.location.href = '/dashboard';
+      }catch(err){
+        console.error(err);
+        showMessage(err.message || 'Sign in failed', true);
+      }
+    });
+
+    // Register flow (includes username + birthdate saved to Firestore user doc)
+    registerBtn.addEventListener('click', async () => {
+      const username = regUsername.value.trim();
+      const email = regEmail.value.trim();
+      const password = regPassword.value;
+      const birthdate = regBirthdate.value || null; // ISO yyyy-mm-dd or null
+      if(!username){ showMessage('Please provide a username', true); return; }
+      if(!email || !password){ showMessage('Please provide email and password', true); return; }
+      showMessage('Creating account...');
+      try{
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCred.user;
+        // Save profile data to Firestore under users/{uid}
+        try{
+          await setDoc(doc(db, 'users', user.uid), {
+            username,
+            email,
+            birthdate,
+            createdAt: serverTimestamp()
+          });
+        }catch(fireErr){
+          console.warn('Could not save profile data to Firestore:', fireErr);
+        }
+        showMessage('Account created. Redirecting...');
+        window.location.href = '/dashboard';
+      }catch(err){
+        console.error(err);
+        showMessage(err.message || 'Registration failed', true);
+      }
+    });
+
+    // If user already has a session, redirect immediately
+    onAuthStateChanged(auth, (user) => {
+      if(user){
+        window.location.href = '/dashboard';
+      }
+    });
+
+    // Footer year
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
