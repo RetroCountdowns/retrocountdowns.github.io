@@ -315,7 +315,8 @@
       getFirestore,
       doc,
       setDoc,
-      serverTimestamp
+      serverTimestamp,
+      Timestamp
     } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -463,7 +464,7 @@
       }
     });
 
-    // Register flow (includes username + birthdate saved to Firestore user doc)
+    // Register flow (includes username + birthdate saved to Firestore 'accounts' collection)
     registerBtn.addEventListener('click', async () => {
       const username = regUsername.value.trim();
       const email = regEmail.value.trim();
@@ -479,17 +480,43 @@
         await new Promise(r => setTimeout(r, 700));
         const userCred = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCred.user;
-        // Save profile data to Firestore under users/{uid}
+
+        // Prepare fields for accounts collection
+        const birthDateField = birthdate ? Timestamp.fromDate(new Date(birthdate)) : null;
+        const languageField = navigator.language || navigator.userLanguage || 'en';
+        const membershipField = 'free';
+        const themeField = 'light';
+        const userIdField = user.uid;
+        const usernameField = username;
+
+        // Save to 'accounts' collection with the specified fields
         try{
-          await setDoc(doc(db, 'users', user.uid), {
-            username,
-            email,
-            birthdate,
+          await setDoc(doc(db, 'accounts', user.uid), {
+            birthDate: birthDateField,
+            email: email || '',
+            language: languageField || '',
+            membership: membershipField,
+            theme: themeField,
+            userId: userIdField,
+            username: usernameField,
             createdAt: serverTimestamp()
           });
         }catch(fireErr){
-          console.warn('Could not save profile data to Firestore:', fireErr);
+          console.warn('Could not save account data to Firestore accounts collection:', fireErr);
         }
+
+        // Optionally also save a lightweight profile in 'users' collection (kept for backward compatibility)
+        try{
+          await setDoc(doc(db, 'users', user.uid), {
+            username: usernameField,
+            email: email,
+            birthdate: birthdate || null,
+            createdAt: serverTimestamp()
+          });
+        }catch(profileErr){
+          console.warn('Could not save profile data to Firestore users collection:', profileErr);
+        }
+
         showSuccess('Success');
         showAuthMessage('Account created');
         setTimeout(() => { window.location.href = '/dashboard/'; }, 900);
