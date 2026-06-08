@@ -7,6 +7,12 @@
   <link rel="icon" href="/files/icon.jpg" />
   <meta name="description" content="RetroCountdown — create anything at any time" />
 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Material Icons (rounded) -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet" />
+
   <style>
     :root{
       --bg:#f6f8fb;
@@ -15,10 +21,12 @@
       --text:#0f172a;
       --accent-1:#6b8cff;
       --accent-2:#ff6b6b;
+      --success:#16a34a;
+      --danger:#ef4444;
       --radius:14px;
       --shadow-1: 0 6px 20px rgba(15,23,42,0.06);
       --shadow-2: 0 20px 60px rgba(15,23,42,0.08);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
 
     html,body{height:100%}
@@ -33,11 +41,11 @@
       min-height:100vh;
     }
 
+    /* Topbar */
     .topbar{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:16px;
       padding:18px 28px;
       position:sticky;
       top:0;
@@ -48,115 +56,49 @@
     }
     .container{max-width:1200px;margin:0 auto;width:100%}
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      text-decoration:none;
-      color:inherit;
-    }
-    .brand img{
-      width:44px;height:44px;border-radius:10px;object-fit:cover;
-      box-shadow:var(--shadow-1);border:1px solid rgba(0,0,0,0.04);
-    }
-    .brand .title{font-size:18px;font-weight:700;line-height:1}
-    .brand .tag{font-size:12px;color:var(--muted);margin-top:2px}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+    .brand img{width:44px;height:44px;border-radius:10px;object-fit:cover;box-shadow:var(--shadow-1);border:1px solid rgba(0,0,0,0.04)}
+    .brand .title{font-size:18px;font-weight:700}
+    .brand .tag{font-size:12px;color:var(--muted)}
 
-    .nav{
-      display:flex;
-      align-items:center;
-      gap:18px;
-    }
-    .nav a{
-      color:var(--muted);
-      text-decoration:none;
-      font-weight:600;
-      padding:8px 10px;
-      border-radius:10px;
-      transition:background .15s, color .15s, transform .12s;
-    }
-    .nav a:hover{background:rgba(107,140,255,0.06); color:var(--accent-1); transform:translateY(-1px)}
+    .nav{display:flex;align-items:center;gap:14px}
+    .nav a{color:var(--muted);text-decoration:none;font-weight:600;padding:8px 10px;border-radius:10px;transition:background .15s,color .15s,transform .12s}
+    .nav a:hover{background:rgba(107,140,255,0.06);color:var(--accent-1);transform:translateY(-1px)}
 
     .btn{
       display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;
       font-weight:700;color:white;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
-      border:none;cursor:pointer;box-shadow:0 10px 30px rgba(107,140,255,0.12);
-      text-decoration:none;
+      border:none;cursor:pointer;box-shadow:0 10px 30px rgba(107,140,255,0.12);text-decoration:none;
     }
-    .btn.ghost{
-      background:transparent;color:var(--accent-1);border:1px solid rgba(107,140,255,0.12);box-shadow:none;
-    }
+    .btn.ghost{background:transparent;color:var(--accent-1);border:1px solid rgba(107,140,255,0.12);box-shadow:none}
 
-    .hero{
-      padding:72px 20px 48px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+    /* Hero */
+    .hero{padding:72px 20px 48px;display:flex;align-items:center;justify-content:center}
     .hero-card{
-      width:100%;
-      max-width:1200px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.9), var(--surface));
-      border-radius:20px;
-      padding:40px;
-      box-shadow:var(--shadow-2);
-      display:grid;
-      grid-template-columns: 1fr 420px;
-      gap:32px;
-      align-items:center;
-      overflow:hidden;
+      width:100%;max-width:1200px;background:linear-gradient(180deg, rgba(255,255,255,0.95), var(--surface));
+      border-radius:20px;padding:40px;box-shadow:var(--shadow-2);display:grid;grid-template-columns:1fr 420px;gap:32px;align-items:center;
     }
+    .kicker{display:inline-block;background:linear-gradient(90deg,#fff6f6,#f0f8ff);color:var(--accent-2);padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px;margin-bottom:12px}
+    h1{margin:0 0 12px 0;font-size:40px;line-height:1.02}
+    p.lead{margin:0 0 22px 0;color:var(--muted);font-size:16px}
 
-    .hero-left h1{
-      margin:0 0 12px 0;
-      font-size:40px;
-      line-height:1.02;
-      letter-spacing:-0.6px;
-    }
-    .hero-left p.lead{
-      margin:0 0 22px 0;color:var(--muted);font-size:16px;
-    }
     .hero-ctas{display:flex;gap:12px;align-items:center}
-
     .badges{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
-    .badge{
-      background:linear-gradient(90deg, rgba(107,140,255,0.06), rgba(255,107,107,0.03));
-      color:var(--accent-1);
-      padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px;
-      box-shadow:0 8px 30px rgba(107,140,255,0.04);
-    }
+    .badge{background:linear-gradient(90deg, rgba(107,140,255,0.06), rgba(255,107,107,0.03));color:var(--accent-1);padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px}
 
-    .preview{
-      display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;
-    }
-    .screen{
-      width:100%;max-width:380px;height:260px;border-radius:14px;background:
-      linear-gradient(135deg,#fff,#f7fbff);box-shadow:var(--shadow-2);border:1px solid rgba(10,20,40,0.03);
-      padding:18px;display:flex;flex-direction:column;gap:10px;justify-content:center;align-items:center;
-      position:relative;overflow:hidden;
-    }
-    .countdown{
-      display:flex;gap:10px;
-    }
-    .countdown .unit{
-      background:linear-gradient(180deg,#fff,#eef4ff);
-      padding:12px 16px;border-radius:10px;font-weight:800;color:var(--text);
-      box-shadow:0 8px 20px rgba(10,20,40,0.04);min-width:64px;text-align:center;font-size:20px;
-    }
+    /* Preview */
+    .preview{display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center}
+    .screen{width:100%;max-width:380px;height:260px;border-radius:14px;background:linear-gradient(135deg,#fff,#f7fbff);box-shadow:var(--shadow-2);border:1px solid rgba(10,20,40,0.03);padding:18px;display:flex;flex-direction:column;gap:10px;justify-content:center;align-items:center}
+    .countdown{display:flex;gap:10px}
+    .unit{background:linear-gradient(180deg,#fff,#eef4ff);padding:12px 16px;border-radius:10px;font-weight:800;color:var(--text);box-shadow:0 8px 20px rgba(10,20,40,0.04);min-width:64px;text-align:center;font-size:20px}
 
-    .features{
-      display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px;
-    }
-    .feature{
-      background:linear-gradient(180deg,#fff,#fbfdff);padding:18px;border-radius:12px;
-      box-shadow:var(--shadow-1);border:1px solid rgba(10,20,40,0.03);
-    }
+    /* Features */
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
+    .feature{background:linear-gradient(180deg,#fff,#fbfdff);padding:18px;border-radius:12px;box-shadow:var(--shadow-1);border:1px solid rgba(10,20,40,0.03)}
     .feature h4{margin:0 0 8px 0;font-size:16px}
     .feature p{margin:0;color:var(--muted);font-size:14px}
 
-    footer{
-      margin-top:auto;padding:28px 20px;background:transparent;border-top:1px solid rgba(10,20,40,0.03);
-    }
+    footer{margin-top:auto;padding:28px 20px;background:transparent;border-top:1px solid rgba(10,20,40,0.03)}
     .footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
     .muted{color:var(--muted)}
 
@@ -171,21 +113,36 @@
 
     .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
 
+    /* Status area */
+    .status{
+      display:flex;align-items:center;gap:12px;margin-top:12px;font-weight:700;
+    }
+    .status .icon{
+      width:36px;height:36px;border-radius:999px;display:inline-grid;place-items:center;color:white;font-size:20px;
+    }
+    .status .text{font-weight:700;color:var(--muted)}
+
+    /* Spinner */
+    .spinner{
+      width:20px;height:20px;border-radius:50%;border:3px solid rgba(255,255,255,0.18);border-top-color:rgba(255,255,255,0.9);animation:spin .9s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Success / error colors */
+    .icon.success{background:var(--success)}
+    .icon.error{background:var(--danger)}
+    .icon.info{background:linear-gradient(90deg,var(--accent-1),var(--accent-2))}
+
+    /* Responsive */
     @media (max-width:980px){
-      .hero-card{grid-template-columns:1fr; padding:28px}
+      .hero-card{grid-template-columns:1fr;padding:28px}
       .features{grid-template-columns:repeat(2,1fr)}
       .nav{display:none}
     }
     @media (max-width:640px){
       .features{grid-template-columns:1fr}
-      .brand .title{font-size:16px}
-      .hero-left h1{font-size:28px}
+      h1{font-size:28px}
     }
-
-    .fade-in{animation:fadeInUp .6s ease both}
-    @keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-    .pulse{animation:pulse 3s ease-in-out infinite}
-    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
   </style>
 </head>
 <body>
@@ -210,9 +167,9 @@
   </header>
 
   <main class="hero" role="main">
-    <div class="hero-card fade-in container" aria-labelledby="hero-title">
-      <div class="hero-left">
-        <div class="kicker badge">Retro style • Modern tools</div>
+    <div class="hero-card container" aria-labelledby="hero-title">
+      <div>
+        <div class="kicker">Retro style • Modern tools</div>
         <h1 id="hero-title">Create anything at any time</h1>
         <p class="lead">Build retro-inspired countdowns, timers and widgets with instant sharing and simple customization. Start for free and scale as you need.</p>
 
@@ -227,7 +184,7 @@
           <div class="badge">Custom themes</div>
         </div>
 
-        <div id="features" class="features" style="margin-top:28px">
+        <div class="features" style="margin-top:28px">
           <div class="feature">
             <h4>Instant previews</h4>
             <p>See changes live as you design — responsive previews for desktop and mobile.</p>
@@ -244,7 +201,7 @@
       </div>
 
       <aside class="preview" aria-hidden="false">
-        <div class="screen pulse" role="img" aria-label="Preview of RetroCountdown">
+        <div class="screen" role="img" aria-label="Preview of RetroCountdown">
           <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:8px">
             <div style="font-weight:800;color:var(--muted)">RetroCountdown</div>
             <div style="font-size:12px;color:var(--muted)">Live preview</div>
@@ -275,12 +232,12 @@
     </div>
   </footer>
 
-  <!-- Modal for Login / Register with username + birthdate in Register -->
+  <!-- Modal for Login / Register -->
   <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal" role="document" aria-labelledby="modalTitle">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <h3 id="modalTitle" style="margin:0">Account</h3>
-        <button id="closeModal" class="btn ghost" type="button">Close</button>
+        <button id="closeModal" class="btn ghost" type="button" aria-label="Close auth dialog">Close</button>
       </div>
 
       <div class="tabs" role="tablist" aria-label="Auth tabs">
@@ -291,7 +248,7 @@
       <div id="authStatus" class="muted" style="margin-bottom:8px">Sign in or create an account</div>
 
       <!-- Login form -->
-      <form id="loginForm" style="display:block" autocomplete="on">
+      <form id="loginForm" style="display:block" autocomplete="on" onsubmit="return false;">
         <div class="form-row">
           <label class="small">Email</label>
           <input id="loginEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
@@ -308,8 +265,8 @@
         </div>
       </form>
 
-      <!-- Register form (includes username + birthdate) -->
-      <form id="registerForm" style="display:none" autocomplete="on">
+      <!-- Register form -->
+      <form id="registerForm" style="display:none" autocomplete="on" onsubmit="return false;">
         <div class="form-row">
           <label class="small">Username</label>
           <input id="regUsername" name="username" type="text" placeholder="yourname" autocomplete="username" required />
@@ -334,6 +291,14 @@
           <button id="registerBtn" class="btn" type="button">Register</button>
         </div>
       </form>
+
+      <!-- Status area (shows buffering / success / error) -->
+      <div id="statusArea" class="status" aria-live="polite" style="display:none">
+        <div id="statusIcon" class="icon info" aria-hidden="true">
+          <span class="material-symbols-rounded" id="statusSymbol">autorenew</span>
+        </div>
+        <div id="statusText" class="text">Authenticating...</div>
+      </div>
     </div>
   </div>
 
@@ -386,6 +351,11 @@
     const regBirthdate = document.getElementById('regBirthdate');
     const registerBtn = document.getElementById('registerBtn');
 
+    const statusArea = document.getElementById('statusArea');
+    const statusIcon = document.getElementById('statusIcon');
+    const statusSymbol = document.getElementById('statusSymbol');
+    const statusText = document.getElementById('statusText');
+
     // Set max birthdate to today (prevents future dates)
     regBirthdate.max = new Date().toISOString().split('T')[0];
 
@@ -403,8 +373,7 @@
     function hideModal(){
       modalBackdrop.style.display = 'none';
       modalBackdrop.setAttribute('aria-hidden','true');
-      authStatus.textContent = 'Sign in or create an account';
-      authStatus.style.color = '';
+      resetStatus();
     }
 
     loginBtn.addEventListener('click', () => openModal('login'));
@@ -435,25 +404,62 @@
     tabLogin.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') switchToLogin(); });
     tabRegister.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') switchToRegister(); });
 
-    // Helpers
-    function showMessage(msg, isError = false){
+    // Helpers for status UI
+    function showBuffering(text = 'Authenticating...'){
+      statusArea.style.display = 'flex';
+      statusIcon.className = 'icon info';
+      statusSymbol.textContent = 'autorenew';
+      statusText.textContent = text;
+    }
+    function showSuccess(text = 'Success'){
+      statusArea.style.display = 'flex';
+      statusIcon.className = 'icon success';
+      statusSymbol.textContent = 'check';
+      statusText.textContent = text;
+    }
+    function showError(text = 'Something went wrong'){
+      statusArea.style.display = 'flex';
+      statusIcon.className = 'icon error';
+      statusSymbol.textContent = 'close';
+      statusText.textContent = text;
+    }
+    function resetStatus(){
+      statusArea.style.display = 'none';
+      statusIcon.className = 'icon info';
+      statusSymbol.textContent = 'autorenew';
+      statusText.textContent = '';
+      authStatus.textContent = 'Sign in or create an account';
+      authStatus.style.color = '';
+    }
+
+    function showAuthMessage(msg, isError = false){
       authStatus.textContent = msg;
-      authStatus.style.color = isError ? '#b91c1c' : '';
+      authStatus.style.color = isError ? 'var(--danger)' : '';
     }
 
     // Login flow
     signinBtn.addEventListener('click', async () => {
       const email = loginEmail.value.trim();
       const password = loginPassword.value;
-      if(!email || !password){ showMessage('Please provide email and password', true); return; }
-      showMessage('Signing in...');
+      if(!email || !password){ showAuthMessage('Please provide email and password', true); return; }
+
+      // Show buffering
+      showBuffering('Authenticating...');
+      showAuthMessage('Authenticating...');
       try{
+        // small delay to show buffering effect
+        await new Promise(r => setTimeout(r, 700));
         await signInWithEmailAndPassword(auth, email, password);
-        showMessage('Signed in. Redirecting...');
-        window.location.href = '/dashboard';
+        showSuccess('Success');
+        showAuthMessage('Signed in successfully');
+        // brief success state then redirect to dashboard
+        setTimeout(() => { window.location.href = '/dashboard/'; }, 900);
       }catch(err){
         console.error(err);
-        showMessage(err.message || 'Sign in failed', true);
+        showError('Something went wrong');
+        showAuthMessage(err.message || 'Sign in failed', true);
+        // redirect to 401 page after short delay
+        setTimeout(() => { window.location.href = '/401.html'; }, 1400);
       }
     });
 
@@ -463,10 +469,14 @@
       const email = regEmail.value.trim();
       const password = regPassword.value;
       const birthdate = regBirthdate.value || null; // ISO yyyy-mm-dd or null
-      if(!username){ showMessage('Please provide a username', true); return; }
-      if(!email || !password){ showMessage('Please provide email and password', true); return; }
-      showMessage('Creating account...');
+
+      if(!username){ showAuthMessage('Please provide a username', true); return; }
+      if(!email || !password){ showAuthMessage('Please provide email and password', true); return; }
+
+      showBuffering('Authenticating...');
+      showAuthMessage('Creating account...');
       try{
+        await new Promise(r => setTimeout(r, 700));
         const userCred = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCred.user;
         // Save profile data to Firestore under users/{uid}
@@ -480,18 +490,21 @@
         }catch(fireErr){
           console.warn('Could not save profile data to Firestore:', fireErr);
         }
-        showMessage('Account created. Redirecting...');
-        window.location.href = '/dashboard';
+        showSuccess('Success');
+        showAuthMessage('Account created');
+        setTimeout(() => { window.location.href = '/dashboard/'; }, 900);
       }catch(err){
         console.error(err);
-        showMessage(err.message || 'Registration failed', true);
+        showError('Something went wrong');
+        showAuthMessage(err.message || 'Registration failed', true);
+        setTimeout(() => { window.location.href = '/401.html'; }, 1400);
       }
     });
 
     // If user already has a session, redirect immediately
     onAuthStateChanged(auth, (user) => {
       if(user){
-        window.location.href = '/dashboard';
+        window.location.href = '/dashboard/';
       }
     });
 
