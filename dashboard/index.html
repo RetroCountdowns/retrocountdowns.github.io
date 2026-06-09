@@ -143,6 +143,9 @@
     /* Empty state */
     .empty{padding:24px;text-align:center;color:var(--muted)}
 
+    /* Error banner */
+    .error-banner{background:linear-gradient(90deg, rgba(239,68,68,0.06), rgba(255,255,255,0.02));border:1px solid rgba(239,68,68,0.12);color:var(--danger);padding:10px;border-radius:8px;margin-bottom:12px;font-weight:700}
+
     /* Footer */
     footer{margin-top:auto;padding:18px 20px;border-top:1px solid rgba(10,20,40,0.03);background:transparent}
     .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px}
@@ -195,6 +198,8 @@
         <h2 id="dashboardTitle">Hello, <span id="greetUsername">—</span></h2>
         <p class="muted" id="creationsSummary">Your Creations (0)</p>
 
+        <div id="dashboardError" style="display:none" class="error-banner" role="alert"></div>
+
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between">
             <div style="font-weight:800">Your creations</div>
@@ -242,7 +247,7 @@
     </div>
   </footer>
 
-  <!-- Firebase + Dashboard script -->
+  <!-- Firebase + Dashboard script (improved error handling) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
     import {
@@ -282,6 +287,7 @@
     const creationsSummary = document.getElementById('creationsSummary');
     const creationsList = document.getElementById('creationsList');
     const emptyState = document.getElementById('emptyState');
+    const dashboardError = document.getElementById('dashboardError');
 
     const profileBtn = document.getElementById('profileBtn');
     const profileMenu = document.getElementById('profileMenu');
@@ -296,7 +302,6 @@
     const sideEmail = document.getElementById('sideEmail');
     const langLabel = document.getElementById('langLabel');
     const membershipLabel = document.getElementById('membershipLabel');
-    const createLink = document.getElementById('createLink');
 
     // Toggle profile menu
     let menuOpen = false;
@@ -320,7 +325,6 @@
       const type = docData.type || 'countdown';
       const title = docData.title || (type === 'clock' ? 'Clock' : 'Countdown');
       const createdAt = docData.createdAt ? (docData.createdAt.toDate ? docData.createdAt.toDate().toLocaleString() : String(docData.createdAt)) : '';
-      const owner = docData.ownerId || '';
       const thumbText = (title || '').slice(0,2).toUpperCase();
 
       const wrapper = document.createElement('div');
@@ -369,6 +373,8 @@
         window.location.href = '/';
       }catch(err){
         console.error('Logout failed', err);
+        // show a small UI hint and redirect to 401 as fallback
+        alert('Logout failed. Redirecting.');
         window.location.href = '/401.html';
       }
     });
@@ -379,36 +385,55 @@
       const uid = profileLink.dataset.uid;
       if(uid) window.location.href = `/user/${uid}`;
     });
-    settingsLink.addEventListener('click', (e) => {
-      // default anchor already points to /settings/
-    });
 
-    // If no active session, redirect to 401
+    // Utility: show dashboard error
+    function showDashboardError(msg){
+      if(dashboardError){
+        dashboardError.textContent = msg;
+        dashboardError.style.display = 'block';
+      } else {
+        console.warn('Dashboard error:', msg);
+      }
+    }
+    function clearDashboardError(){
+      if(dashboardError){
+        dashboardError.textContent = '';
+        dashboardError.style.display = 'none';
+      }
+    }
+
+    // If no active session, redirect to 401. Otherwise load data.
     onAuthStateChanged(auth, async (user) => {
       if(!user){
         // no session — redirect to 401
+        console.warn('No active session — redirecting to 401');
         window.location.href = '/401.html';
         return;
       }
 
-      // user is signed in — load account and creations
+      // user is signed in — load account and creations, but handle errors gracefully
       try{
         const uid = user.uid;
 
         // Load account document from 'accounts' collection
-        const accRef = doc(db, 'accounts', uid);
-        const accSnap = await getDoc(accRef);
         let account = null;
-        if(accSnap.exists()){
-          account = accSnap.data();
-        } else {
-          // fallback: try 'users' collection
-          const userRef = doc(db, 'users', uid);
-          const userSnap = await getDoc(userRef);
-          if(userSnap.exists()) account = userSnap.data();
+        try{
+          const accRef = doc(db, 'accounts', uid);
+          const accSnap = await getDoc(accRef);
+          if(accSnap.exists()){
+            account = accSnap.data();
+          } else {
+            // fallback: try 'users' collection
+            const userRef = doc(db, 'users', uid);
+            const userSnap = await getDoc(userRef);
+            if(userSnap.exists()) account = userSnap.data();
+          }
+        }catch(accErr){
+          console.warn('Could not read account document:', accErr);
+          // continue with partial data
         }
 
-        const username = (account && account.username) ? account.username : (user.displayName || user.email?.split('@')[0] || 'User');
+        const username = (account && account.username) ? account.username : (user.displayName || (user.email ? user.email.split('@')[0] : 'User'));
         const email = (account && account.email) ? account.email : (user.email || '');
         const language = (account && account.language) ? account.language : (navigator.language || 'en');
         const membership = (account && account.membership) ? account.membership : 'free';
@@ -429,26 +454,38 @@
         profileLink.href = `/user/${uid}`;
         profileLink.dataset.uid = uid;
 
-        // Query creations: try 'creations' collection where ownerId == uid
-        const creationsCol = collection(db, 'creations');
-        const q = query(creationsCol, where('ownerId', '==', uid), orderBy('createdAt', 'desc'));
-        const qSnap = await getDocs(q);
+        // Clear any previous dashboard error
+        clearDashboardError();
 
-        // If none found, try subcollection users/{uid}/creations
+        // Query creations: try 'creations' collection where ownerId == uid
         let creations = [];
-        if(!qSnap.empty){
+        try{
+          const creationsCol = collection(db, 'creations');
+          // NOTE: if you don't have an index for this query Firestore will throw an error with a link to create index
+          const q = query(creationsCol, where('ownerId', '==', uid), orderBy('createdAt', 'desc'));
+          const qSnap = await getDocs(q);
           qSnap.forEach(d => creations.push({ id: d.id, ...d.data() }));
-        } else {
-          // fallback: try users/{uid}/creations
-          const subCol = collection(db, 'users', uid, 'creations');
-          const q2 = query(subCol, orderBy('createdAt', 'desc'));
-          const q2Snap = await getDocs(q2);
-          q2Snap.forEach(d => creations.push({ id: d.id, ...d.data() }));
+        }catch(queryErr){
+          console.warn('Primary creations query failed:', queryErr);
+          // If primary query fails (e.g., requires index), try fallback to users/{uid}/creations
+          try{
+            const subCol = collection(db, 'users', uid, 'creations');
+            const q2 = query(subCol, orderBy('createdAt', 'desc'));
+            const q2Snap = await getDocs(q2);
+            q2Snap.forEach(d => creations.push({ id: d.id, ...d.data() }));
+          }catch(subErr){
+            console.error('Fallback creations query also failed:', subErr);
+            // Show friendly message to user instead of redirect
+            showDashboardError('Could not load your creations. Please try again later. If the problem persists, contact support.');
+            // include developer hint in console (index link etc.)
+            console.error('Creations load error details:', { primaryError: queryErr, fallbackError: subErr });
+          }
         }
 
         // Render creations
         creationsList.innerHTML = '';
-        if(creations.length === 0){
+        if(!creations || creations.length === 0){
+          creationsSummary.textContent = `Your Creations (0)`;
           emptyState.textContent = 'You have no creations yet. Click "Create new" to get started.';
           creationsList.appendChild(emptyState);
         } else {
@@ -460,9 +497,10 @@
         }
 
       }catch(err){
-        console.error('Failed to load dashboard data', err);
-        // If something goes wrong, redirect to 401
-        window.location.href = '/401.html';
+        // Unexpected error while preparing dashboard — do not assume auth problem
+        console.error('Unexpected dashboard error:', err);
+        showDashboardError('An unexpected error occurred while loading your dashboard. Please refresh the page.');
+        // Do NOT redirect to 401 here — only redirect on auth failure
       }
     });
 
