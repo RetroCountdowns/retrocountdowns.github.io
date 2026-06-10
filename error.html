@@ -1,0 +1,336 @@
+<!-- save as error.html and serve for all error codes (or copy/rename per code) -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RetroCountdown — Error</title>
+  <link rel="icon" href="/files/icon.jpg" />
+  <meta name="description" content="RetroCountdown — friendly error pages" />
+
+  <!-- Google Font + Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --text:#0f172a;
+      --accent:#6b8cff;
+      --accent-2:#ff6b6b;
+      --danger:#ef4444;
+      --success:#16a34a;
+      --radius:14px;
+      --shadow: 0 18px 60px rgba(15,23,42,0.08);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#fbfdff 0%, var(--bg) 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:36px;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:1100px;
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:28px;
+      align-items:center;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,0.95), var(--card));
+      border-radius:18px;
+      padding:36px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(10,20,40,0.04);
+    }
+
+    header.site{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom:18px;
+    }
+    .brand img{width:48px;height:48px;border-radius:10px;object-fit:cover;box-shadow:0 8px 30px rgba(107,140,255,0.08)}
+    .brand h1{margin:0;font-size:18px}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
+
+    .error-code{
+      font-size:96px;
+      font-weight:800;
+      line-height:1;
+      margin:6px 0;
+      color:var(--accent);
+      letter-spacing:-2px;
+    }
+    .error-title{
+      font-size:28px;
+      margin:6px 0 12px 0;
+      font-weight:800;
+    }
+    .error-desc{
+      color:var(--muted);
+      margin:0 0 18px 0;
+      font-size:15px;
+    }
+
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;
+      font-weight:700;color:white;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      text-decoration:none;border:none;cursor:pointer;
+    }
+    .btn.ghost{
+      background:transparent;color:var(--accent);border:1px solid rgba(107,140,255,0.12);
+    }
+
+    .suggestions{
+      margin-top:22px;
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+    }
+    .suggest{
+      background:linear-gradient(180deg,#fff,#fbfdff);
+      padding:12px;border-radius:10px;border:1px solid rgba(10,20,40,0.03);
+      display:flex;gap:10px;align-items:flex-start;
+    }
+    .suggest .icon{
+      width:44px;height:44;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:white;font-weight:800;
+    }
+    .suggest h4{margin:0;font-size:14px}
+    .suggest p{margin:4px 0 0 0;color:var(--muted);font-size:13px}
+
+    /* Right column visual */
+    .visual{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:18px;
+      flex-direction:column;
+    }
+    .visual-card{
+      width:100%;
+      max-width:360px;
+      border-radius:14px;
+      padding:18px;
+      background:linear-gradient(135deg,#fff,#f7fbff);
+      box-shadow:0 30px 80px rgba(10,20,40,0.08);
+      border:1px solid rgba(10,20,40,0.03);
+      display:flex;flex-direction:column;gap:12px;align-items:center;
+    }
+    .visual .big{
+      width:160px;height:160px;border-radius:18px;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      display:grid;place-items:center;color:white;font-weight:900;font-size:40px;
+      box-shadow:0 18px 50px rgba(107,140,255,0.12);
+    }
+    .visual p{margin:0;color:var(--muted);text-align:center}
+
+    footer.small{
+      margin-top:12px;color:var(--muted);font-size:13px;text-align:center;
+    }
+
+    /* responsive */
+    @media (max-width:980px){
+      .wrap{grid-template-columns:1fr; padding:0}
+      .visual{order:-1}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main" aria-labelledby="errTitle">
+    <div class="panel" aria-live="polite">
+      <header class="site">
+        <a class="brand" href="/" aria-label="RetroCountdown home">
+          <img src="/files/icon.jpg" alt="RetroCountdown icon" />
+        </a>
+        <div>
+          <h1>RetroCountdown</h1>
+          <p>Light theme • Friendly errors</p>
+        </div>
+      </header>
+
+      <!-- dynamic content -->
+      <div id="errorContent">
+        <div class="error-code" id="code">500</div>
+        <div class="error-title" id="title">Something went wrong</div>
+        <p class="error-desc" id="desc">An unexpected error occurred on the server. Try refreshing the page or come back later.</p>
+
+        <div class="actions" id="actions">
+          <a class="btn" href="/">Home</a>
+          <a class="btn ghost" href="/support">Contact support</a>
+          <a class="btn ghost" href="/create">Create new</a>
+        </div>
+
+        <div class="suggestions" id="suggestions">
+          <div class="suggest">
+            <div class="icon">🔁</div>
+            <div>
+              <h4>Try again</h4>
+              <p>Refresh the page or retry the action you were performing.</p>
+            </div>
+          </div>
+
+          <div class="suggest">
+            <div class="icon">🔍</div>
+            <div>
+              <h4>Search help</h4>
+              <p>Look for troubleshooting steps in our help center or FAQs.</p>
+            </div>
+          </div>
+
+          <div class="suggest">
+            <div class="icon">🔐</div>
+            <div>
+              <h4>Check access</h4>
+              <p>Some errors mean you don't have permission — sign in or contact support.</p>
+            </div>
+          </div>
+
+          <div class="suggest">
+            <div class="icon">📄</div>
+            <div>
+              <h4>Report issue</h4>
+              <p>Provide details (what you did, time, URL) to help us investigate faster.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="small">© 2024 - <span id="year">2024</span> RetroCountdowns</footer>
+    </div>
+
+    <aside class="visual">
+      <div class="visual-card" role="complementary" aria-hidden="true">
+        <div class="big" id="visualBig">500</div>
+        <p id="visualText">Server error — our team has been notified.</p>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <a class="btn ghost" href="/" style="text-decoration:none">Return home</a>
+          <a class="btn" href="/support" style="text-decoration:none">Get help</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    /**
+     * Dynamic error page template
+     * - Reads code from query param ?code=404 or from path (last segment) if served as /401.html
+     * - Maps codes to friendly titles and descriptions for the requested list:
+     *   400,401,403,404,405,406,407,408,410,421,422,423,429,451,500,501,502,503,504,507
+     *
+     * Usage:
+     *  - Serve this file as error.html and call /error.html?code=404
+     *  - Or copy/rename to 404.html and it will pick up code from filename
+     */
+
+    const codeMap = {
+      400: { title: 'Bad Request', desc: 'The server could not understand the request due to invalid syntax.' },
+      401: { title: 'Unauthorized', desc: 'You need to sign in to access this page. Please log in and try again.' },
+      403: { title: 'Forbidden', desc: 'You do not have permission to view this resource.' },
+      404: { title: 'Not Found', desc: 'We can’t find the page you’re looking for. It may have been moved or deleted.' },
+      405: { title: 'Method Not Allowed', desc: 'The request method is not supported for this resource.' },
+      406: { title: 'Not Acceptable', desc: 'The requested resource is capable of generating only content not acceptable.' },
+      407: { title: 'Proxy Authentication Required', desc: 'Proxy authentication is required to access this resource.' },
+      408: { title: 'Request Timeout', desc: 'The server timed out waiting for the request. Try again.' },
+      410: { title: 'Gone', desc: 'This resource is no longer available and has been permanently removed.' },
+      421: { title: 'Misdirected Request', desc: 'The request was directed at a server that is not able to produce a response.' },
+      422: { title: 'Unprocessable Entity', desc: 'The server understands the content type but was unable to process the contained instructions.' },
+      423: { title: 'Locked', desc: 'The resource that is being accessed is locked.' },
+      429: { title: 'Too Many Requests', desc: 'You have sent too many requests in a short period. Please slow down.' },
+      451: { title: 'Unavailable For Legal Reasons', desc: 'The resource is unavailable due to legal reasons.' },
+      500: { title: 'Internal Server Error', desc: 'An unexpected error occurred on the server. Try again later.' },
+      501: { title: 'Not Implemented', desc: 'The server does not support the functionality required to fulfill the request.' },
+      502: { title: 'Bad Gateway', desc: 'The server received an invalid response from the upstream server.' },
+      503: { title: 'Service Unavailable', desc: 'The server is currently unavailable (overloaded or down). Try again later.' },
+      504: { title: 'Gateway Timeout', desc: 'The upstream server failed to send a request in time.' },
+      507: { title: 'Insufficient Storage', desc: 'The server is unable to store the representation needed to complete the request.' }
+    };
+
+    function getCodeFromQuery(){
+      const params = new URLSearchParams(location.search);
+      const c = params.get('code');
+      if(c && /^\d{3}$/.test(c)) return Number(c);
+      return null;
+    }
+
+    function getCodeFromPath(){
+      // try to read last path segment if file named like /401.html or /errors/401
+      const path = location.pathname;
+      const seg = path.split('/').filter(Boolean).pop() || '';
+      const m = seg.match(/^(\d{3})(?:\.html)?$/);
+      if(m) return Number(m[1]);
+      return null;
+    }
+
+    function renderForCode(code){
+      const elCode = document.getElementById('code');
+      const elTitle = document.getElementById('title');
+      const elDesc = document.getElementById('desc');
+      const elVisual = document.getElementById('visualBig');
+      const elVisualText = document.getElementById('visualText');
+      const actions = document.getElementById('actions');
+
+      const info = codeMap[code] || { title: 'Unknown Error', desc: 'An unexpected condition was encountered.' };
+
+      elCode.textContent = code;
+      elTitle.textContent = info.title;
+      elDesc.textContent = info.desc;
+      elVisual.textContent = code;
+      elVisualText.textContent = info.desc;
+
+      // Adjust action suggestions for specific codes
+      actions.innerHTML = '';
+      const home = document.createElement('a'); home.className='btn'; home.href='/'; home.textContent='Home';
+      const support = document.createElement('a'); support.className='btn ghost'; support.href='/support'; support.textContent='Contact support';
+      actions.appendChild(home);
+      actions.appendChild(support);
+
+      // For auth errors show login
+      if(code === 401){
+        const login = document.createElement('a'); login.className='btn'; login.href='/login'; login.textContent='Sign in';
+        actions.appendChild(login);
+      }
+
+      // For 404 add search
+      if(code === 404){
+        const search = document.createElement('a'); search.className='btn ghost'; search.href='/search'; search.textContent='Search site';
+        actions.appendChild(search);
+      }
+
+      // For rate limit
+      if(code === 429){
+        const wait = document.createElement('a'); wait.className='btn ghost'; wait.href='javascript:location.reload()'; wait.textContent='Retry';
+        actions.appendChild(wait);
+      }
+
+      // For server errors add status page
+      if(code >= 500 && code < 600){
+        const status = document.createElement('a'); status.className='btn ghost'; status.href='/status'; status.textContent='Status';
+        actions.appendChild(status);
+      }
+    }
+
+    (function init(){
+      const yearEl = document.getElementById('year');
+      yearEl.textContent = new Date().getFullYear();
+
+      let code = getCodeFromQuery() || getCodeFromPath() || 500;
+      // sanitize: only allow codes we support; otherwise fallback to 500
+      if(!Object.prototype.hasOwnProperty.call(codeMap, code)) code = 500;
+      renderForCode(code);
+    })();
+  </script>
+</body>
+</html>
