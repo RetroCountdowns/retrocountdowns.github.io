@@ -39,10 +39,8 @@
 
     .wrap{
       width:100%;
-      max-width:1100px;
-      display:grid;
-      grid-template-columns: 1fr 420px;
-      gap:28px;
+      max-width:980px;
+      display:block;
       align-items:center;
     }
 
@@ -75,10 +73,13 @@
       flex-wrap:wrap;
     }
     .error-left{
-      min-width:220px;
+      min-width:160px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
     .error-code{
-      font-size:96px;
+      font-size:88px;
       font-weight:800;
       line-height:1;
       margin:6px 0;
@@ -86,7 +87,7 @@
       letter-spacing:-2px;
     }
     .error-title{
-      font-size:28px;
+      font-size:24px;
       margin:6px 0 12px 0;
       font-weight:800;
     }
@@ -94,7 +95,7 @@
       color:var(--muted);
       margin:0 0 18px 0;
       font-size:15px;
-      max-width:560px;
+      max-width:720px;
     }
 
     .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
@@ -124,40 +125,14 @@
     .suggest h4{margin:0;font-size:14px}
     .suggest p{margin:4px 0 0 0;color:var(--muted);font-size:13px}
 
-    /* Right column visual + extra actions (no duplicate code) */
-    .visual{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:18px;
-      flex-direction:column;
-    }
-    .visual-card{
-      width:100%;
-      max-width:360px;
-      border-radius:14px;
-      padding:18px;
-      background:linear-gradient(135deg,#fff,#f7fbff);
-      box-shadow:0 30px 80px rgba(10,20,40,0.08);
-      border:1px solid rgba(10,20,40,0.03);
-      display:flex;flex-direction:column;gap:12px;align-items:center;
-    }
-    .visual .big{
-      width:160px;height:160px;border-radius:18px;background:linear-gradient(90deg,var(--accent),var(--accent-2));
-      display:grid;place-items:center;color:white;font-weight:900;font-size:40px;
-      box-shadow:0 18px 50px rgba(107,140,255,0.12);
-    }
-    .visual p{margin:0;color:var(--muted);text-align:center}
-
     footer.small{
       margin-top:12px;color:var(--muted);font-size:13px;text-align:center;
     }
 
     /* responsive */
-    @media (max-width:980px){
-      .wrap{grid-template-columns:1fr; padding:0}
-      .visual{order:-1}
-      .error-block{flex-direction:column;align-items:flex-start}
+    @media (max-width:720px){
+      .panel{padding:20px}
+      .error-code{font-size:64px}
       .suggestions{grid-template-columns:1fr}
     }
   </style>
@@ -228,30 +203,14 @@
 
       <footer class="small">© <span id="year">2024</span> RetroCountdowns</footer>
     </div>
-
-    <!-- PRAWA KOLUMNA: ilustracja / status / dodatkowe akcje (bez powielania kodu) -->
-    <aside class="visual" aria-hidden="true">
-      <div class="visual-card">
-        <div class="big" id="visualBig">500</div>
-        <p id="visualText">Server error — our team has been notified.</p>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <a class="btn ghost" href="/" style="text-decoration:none">Return home</a>
-          <a class="btn" href="/support" style="text-decoration:none">Get help</a>
-        </div>
-      </div>
-    </aside>
   </div>
 
   <script>
     /**
-     * Dynamic error page template
+     * Dynamic error page template (single central block; no right column)
      * - Reads code from query param ?code=404 or from path (last segment) if served as /401.html or /401/
-     * - Maps codes to friendly titles and descriptions for the requested list:
+     * - Maps codes to friendly titles and descriptions for:
      *   400,401,403,404,405,406,407,408,410,421,422,423,429,451,500,501,502,503,504,507
-     *
-     * Notes:
-     * - To serve at /500/ and return proper HTTP status, configure your server to return this file with status 500.
-     * - If you simply open /500/ without server status, the browser will receive 200 unless server is configured.
      */
 
     const codeMap = {
@@ -285,12 +244,10 @@
     }
 
     function getCodeFromPath(){
-      // try to read last path segment if file named like /401.html or /errors/401 or /401/
       const path = location.pathname;
       const seg = path.split('/').filter(Boolean).pop() || '';
       const m = seg.match(/^(\d{3})(?:\.html)?$/);
       if(m) return Number(m[1]);
-      // also handle trailing slash like /500/
       const trailing = path.match(/\/(\d{3})\/?$/);
       if(trailing) return Number(trailing[1]);
       return null;
@@ -300,8 +257,6 @@
       const elCode = document.getElementById('code');
       const elTitle = document.getElementById('title');
       const elDesc = document.getElementById('desc');
-      const elVisual = document.getElementById('visualBig');
-      const elVisualText = document.getElementById('visualText');
       const actions = document.getElementById('actions');
 
       const info = codeMap[code] || { title: 'Unknown Error', desc: 'An unexpected condition was encountered.' };
@@ -309,10 +264,7 @@
       elCode.textContent = code;
       elTitle.textContent = info.title;
       elDesc.textContent = info.desc;
-      elVisual.textContent = code;
-      elVisualText.textContent = info.desc;
 
-      // Adjust action suggestions for specific codes
       actions.innerHTML = '';
       const home = document.createElement('a'); home.className='btn'; home.href='/'; home.textContent='Home';
       const support = document.createElement('a'); support.className='btn ghost'; support.href='/support'; support.textContent='Contact support';
