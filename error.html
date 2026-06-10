@@ -1,4 +1,3 @@
-<!-- save as error.html and serve for all error codes (or copy/rename per code) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -21,7 +20,6 @@
       --accent:#6b8cff;
       --accent-2:#ff6b6b;
       --danger:#ef4444;
-      --success:#16a34a;
       --radius:14px;
       --shadow: 0 18px 60px rgba(15,23,42,0.08);
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -54,18 +52,31 @@
       padding:36px;
       box-shadow:var(--shadow);
       border:1px solid rgba(10,20,40,0.04);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
     }
 
     header.site{
       display:flex;
       align-items:center;
       gap:14px;
-      margin-bottom:18px;
+      margin-bottom:6px;
     }
     .brand img{width:48px;height:48px;border-radius:10px;object-fit:cover;box-shadow:0 8px 30px rgba(107,140,255,0.08)}
     .brand h1{margin:0;font-size:18px}
     .brand p{margin:0;color:var(--muted);font-size:13px}
 
+    /* Central error block (single place for code + title + desc) */
+    .error-block{
+      display:flex;
+      gap:20px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .error-left{
+      min-width:220px;
+    }
     .error-code{
       font-size:96px;
       font-weight:800;
@@ -83,9 +94,10 @@
       color:var(--muted);
       margin:0 0 18px 0;
       font-size:15px;
+      max-width:560px;
     }
 
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
     .btn{
       display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;
       font-weight:700;color:white;background:linear-gradient(90deg,var(--accent),var(--accent-2));
@@ -96,7 +108,7 @@
     }
 
     .suggestions{
-      margin-top:22px;
+      margin-top:12px;
       display:grid;
       grid-template-columns:repeat(2,1fr);
       gap:12px;
@@ -112,7 +124,7 @@
     .suggest h4{margin:0;font-size:14px}
     .suggest p{margin:4px 0 0 0;color:var(--muted);font-size:13px}
 
-    /* Right column visual */
+    /* Right column visual + extra actions (no duplicate code) */
     .visual{
       display:flex;
       align-items:center;
@@ -145,6 +157,8 @@
     @media (max-width:980px){
       .wrap{grid-template-columns:1fr; padding:0}
       .visual{order:-1}
+      .error-block{flex-direction:column;align-items:flex-start}
+      .suggestions{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -161,58 +175,63 @@
         </div>
       </header>
 
-      <!-- dynamic content -->
-      <div id="errorContent">
-        <div class="error-code" id="code">500</div>
-        <div class="error-title" id="title">Something went wrong</div>
-        <p class="error-desc" id="desc">An unexpected error occurred on the server. Try refreshing the page or come back later.</p>
-
-        <div class="actions" id="actions">
-          <a class="btn" href="/">Home</a>
-          <a class="btn ghost" href="/support">Contact support</a>
-          <a class="btn ghost" href="/create">Create new</a>
+      <!-- CENTRALNY BLOK BŁĘDU (tylko tutaj kod + tytuł + opis) -->
+      <div class="error-block" id="errorBlock">
+        <div class="error-left" aria-hidden="false">
+          <div class="error-code" id="code">500</div>
         </div>
 
-        <div class="suggestions" id="suggestions">
-          <div class="suggest">
-            <div class="icon">🔁</div>
-            <div>
-              <h4>Try again</h4>
-              <p>Refresh the page or retry the action you were performing.</p>
-            </div>
+        <div class="error-main">
+          <div class="error-title" id="title">Something went wrong</div>
+          <p class="error-desc" id="desc">An unexpected error occurred on the server. Try refreshing the page or come back later.</p>
+
+          <div class="actions" id="actions">
+            <a class="btn" href="/">Home</a>
+            <a class="btn ghost" href="/support">Contact support</a>
           </div>
 
-          <div class="suggest">
-            <div class="icon">🔍</div>
-            <div>
-              <h4>Search help</h4>
-              <p>Look for troubleshooting steps in our help center or FAQs.</p>
+          <div class="suggestions" id="suggestions">
+            <div class="suggest">
+              <div class="icon">🔁</div>
+              <div>
+                <h4>Try again</h4>
+                <p>Refresh the page or retry the action you were performing.</p>
+              </div>
             </div>
-          </div>
 
-          <div class="suggest">
-            <div class="icon">🔐</div>
-            <div>
-              <h4>Check access</h4>
-              <p>Some errors mean you don't have permission — sign in or contact support.</p>
+            <div class="suggest">
+              <div class="icon">🔍</div>
+              <div>
+                <h4>Search help</h4>
+                <p>Look for troubleshooting steps in our help center or FAQs.</p>
+              </div>
             </div>
-          </div>
 
-          <div class="suggest">
-            <div class="icon">📄</div>
-            <div>
-              <h4>Report issue</h4>
-              <p>Provide details (what you did, time, URL) to help us investigate faster.</p>
+            <div class="suggest">
+              <div class="icon">🔐</div>
+              <div>
+                <h4>Check access</h4>
+                <p>Some errors mean you don't have permission — sign in or contact support.</p>
+              </div>
+            </div>
+
+            <div class="suggest">
+              <div class="icon">📄</div>
+              <div>
+                <h4>Report issue</h4>
+                <p>Provide details (what you did, time, URL) to help us investigate faster.</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <footer class="small">© 2024 - <span id="year">2024</span> RetroCountdowns</footer>
+      <footer class="small">© <span id="year">2024</span> RetroCountdowns</footer>
     </div>
 
-    <aside class="visual">
-      <div class="visual-card" role="complementary" aria-hidden="true">
+    <!-- PRAWA KOLUMNA: ilustracja / status / dodatkowe akcje (bez powielania kodu) -->
+    <aside class="visual" aria-hidden="true">
+      <div class="visual-card">
         <div class="big" id="visualBig">500</div>
         <p id="visualText">Server error — our team has been notified.</p>
         <div style="display:flex;gap:8px;margin-top:8px">
@@ -226,13 +245,13 @@
   <script>
     /**
      * Dynamic error page template
-     * - Reads code from query param ?code=404 or from path (last segment) if served as /401.html
+     * - Reads code from query param ?code=404 or from path (last segment) if served as /401.html or /401/
      * - Maps codes to friendly titles and descriptions for the requested list:
      *   400,401,403,404,405,406,407,408,410,421,422,423,429,451,500,501,502,503,504,507
      *
-     * Usage:
-     *  - Serve this file as error.html and call /error.html?code=404
-     *  - Or copy/rename to 404.html and it will pick up code from filename
+     * Notes:
+     * - To serve at /500/ and return proper HTTP status, configure your server to return this file with status 500.
+     * - If you simply open /500/ without server status, the browser will receive 200 unless server is configured.
      */
 
     const codeMap = {
@@ -266,11 +285,14 @@
     }
 
     function getCodeFromPath(){
-      // try to read last path segment if file named like /401.html or /errors/401
+      // try to read last path segment if file named like /401.html or /errors/401 or /401/
       const path = location.pathname;
       const seg = path.split('/').filter(Boolean).pop() || '';
       const m = seg.match(/^(\d{3})(?:\.html)?$/);
       if(m) return Number(m[1]);
+      // also handle trailing slash like /500/
+      const trailing = path.match(/\/(\d{3})\/?$/);
+      if(trailing) return Number(trailing[1]);
       return null;
     }
 
@@ -297,25 +319,18 @@
       actions.appendChild(home);
       actions.appendChild(support);
 
-      // For auth errors show login
       if(code === 401){
         const login = document.createElement('a'); login.className='btn'; login.href='/login'; login.textContent='Sign in';
         actions.appendChild(login);
       }
-
-      // For 404 add search
       if(code === 404){
         const search = document.createElement('a'); search.className='btn ghost'; search.href='/search'; search.textContent='Search site';
         actions.appendChild(search);
       }
-
-      // For rate limit
       if(code === 429){
-        const wait = document.createElement('a'); wait.className='btn ghost'; wait.href='javascript:location.reload()'; wait.textContent='Retry';
-        actions.appendChild(wait);
+        const retry = document.createElement('a'); retry.className='btn ghost'; retry.href='javascript:location.reload()'; retry.textContent='Retry';
+        actions.appendChild(retry);
       }
-
-      // For server errors add status page
       if(code >= 500 && code < 600){
         const status = document.createElement('a'); status.className='btn ghost'; status.href='/status'; status.textContent='Status';
         actions.appendChild(status);
@@ -323,11 +338,8 @@
     }
 
     (function init(){
-      const yearEl = document.getElementById('year');
-      yearEl.textContent = new Date().getFullYear();
-
+      document.getElementById('year').textContent = new Date().getFullYear();
       let code = getCodeFromQuery() || getCodeFromPath() || 500;
-      // sanitize: only allow codes we support; otherwise fallback to 500
       if(!Object.prototype.hasOwnProperty.call(codeMap, code)) code = 500;
       renderForCode(code);
     })();
