@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RetroCountdown — Create</title>
+  <link rel="icon" href="/files/icon.jpg" />
+  <meta name="description" content="Create a new countdown or clock — RetroCountdown dashboard" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --surface:#ffffff;
+      --muted:#6b7280;
+      --text:#0f172a;
+      --accent-1:#6b8cff;
+      --accent-2:#ff6b6b;
+      --radius:14px;
+      --shadow-1: 0 6px 20px rgba(15,23,42,0.06);
+      --shadow-2: 0 20px 60px rgba(15,23,42,0.08);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#fbfdff 0%, var(--bg) 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
+
+    /* Topbar */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 22px;
+      position:sticky;
+      top:0;
+      z-index:40;
+      background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+      backdrop-filter: blur(6px);
+      border-bottom:1px solid rgba(10,20,40,0.04);
+    }
+    .container{max-width:1100px;margin:0 auto;width:100%}
+
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+    .brand img{width:40px;height:40px;border-radius:10px;object-fit:cover;box-shadow:var(--shadow-1);border:1px solid rgba(0,0,0,0.04)}
+    .brand .title{font-size:16px;font-weight:800}
+    .brand .tag{font-size:12px;color:var(--muted)}
+
+    .nav{display:flex;align-items:center;gap:12px}
+    .nav a{color:var(--muted);text-decoration:none;font-weight:600;padding:8px 10px;border-radius:10px;transition:background .12s,color .12s}
+    .nav a:hover{background:rgba(107,140,255,0.06);color:var(--accent-1)}
+
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;
+      font-weight:700;color:white;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
+      border:none;cursor:pointer;box-shadow:0 8px 24px rgba(107,140,255,0.08);text-decoration:none;
+    }
+    .btn.ghost{background:transparent;color:var(--accent-1);border:1px solid rgba(107,140,255,0.12);box-shadow:none}
+
+    /* Profile menu */
+    .profile { position:relative; }
+    .profile-btn{ display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:10px;background:transparent;border:1px solid rgba(10,20,40,0.04);cursor:pointer; }
+    .profile-avatar{ width:34px;height:34px;border-radius:8px;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));display:inline-grid;place-items:center;color:white;font-weight:800; }
+    .profile-menu{ position:absolute;right:0;top:48px;background:var(--surface);border-radius:10px;box-shadow:0 18px 50px rgba(10,20,40,0.12);padding:8px;border:1px solid rgba(10,20,40,0.04);min-width:220px;display:none; }
+    .profile-menu .row{display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:8px}
+    .profile-menu a, .profile-menu button{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;text-decoration:none;color:var(--text);background:transparent;border:none;width:100%;text-align:left;cursor:pointer;font-weight:600;}
+    .profile-menu a:hover, .profile-menu button:hover{background:rgba(107,140,255,0.04)}
+
+    /* Page layout */
+    main.create{
+      flex:1;
+      display:flex;
+      justify-content:center;
+      padding:36px 20px;
+    }
+    .card{
+      width:100%;
+      max-width:980px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.95), var(--surface));
+      border-radius:16px;
+      padding:28px;
+      box-shadow:var(--shadow-2);
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:20px;
+      align-items:start;
+    }
+
+    .left h2{margin:0 0 8px 0;font-size:22px}
+    .left p.muted{margin:0 0 18px 0;color:var(--muted)}
+
+    .select-grid{display:flex;flex-direction:column;gap:12px}
+    .option{
+      display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1px solid rgba(10,20,40,0.04);background:linear-gradient(180deg,#fff,#fbfdff);cursor:pointer;
+      transition:transform .12s, box-shadow .12s;
+    }
+    .option:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(107,140,255,0.06)}
+    .option input{display:none}
+    .option .icon{width:56px;height:56px;border-radius:10px;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));display:grid;place-items:center;color:white;font-weight:900;font-size:18px}
+    .option .meta{display:flex;flex-direction:column}
+    .option .meta .title{font-weight:800}
+    .option .meta .desc{color:var(--muted);font-size:13px}
+
+    .form-row{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+    input[type="text"]{padding:12px 14px;border-radius:10px;border:1px solid rgba(10,20,40,0.06);background:linear-gradient(180deg,#fff,#fbfdff);outline:none;font-size:14px}
+
+    .actions{display:flex;gap:12px;margin-top:14px;align-items:center}
+
+    .right{display:flex;flex-direction:column;gap:12px}
+    .summary{padding:14px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid rgba(10,20,40,0.03)}
+    .summary .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .status{color:var(--muted);font-size:13px}
+
+    .notice{margin-top:12px;color:var(--danger);font-weight:700}
+
+    @media (max-width:980px){
+      .card{grid-template-columns:1fr;padding:18px}
+      .profile-menu{right:8px}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" role="banner">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+      <a class="brand" href="/" aria-label="RetroCountdown home">
+        <img src="/files/icon.jpg" alt="RetroCountdown icon" />
+        <div>
+          <div class="title">RetroCountdown</div>
+          <div class="tag">Create</div>
+        </div>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="/dashboard/">Dashboard</a>
+        <a href="/create">Create</a>
+        <a href="/examples">Examples</a>
+
+        <div class="profile" id="profileRoot" aria-haspopup="true">
+          <button id="profileBtn" class="profile-btn" aria-expanded="false" aria-controls="profileMenu">
+            <div class="profile-avatar" id="profileAvatar">U</div>
+            <div style="display:flex;flex-direction:column;align-items:flex-start;line-height:1">
+              <div id="navUsername" style="font-weight:700;font-size:13px">User</div>
+              <div style="font-size:11px;color:var(--muted)">Account</div>
+            </div>
+            <span class="material-symbols-rounded" style="font-size:18px;color:var(--muted)">expand_more</span>
+          </button>
+
+          <div id="profileMenu" class="profile-menu" role="menu" aria-hidden="true">
+            <div class="row" style="padding-bottom:6px;border-bottom:1px solid rgba(10,20,40,0.03);margin-bottom:6px">
+              <div style="display:flex;flex-direction:column">
+                <div id="menuUsername" style="font-weight:800">Username</div>
+                <div style="color:var(--muted);font-size:13px" id="menuEmail">you@example.com</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-weight:800">Coins</div>
+                <div id="menuCoins" style="color:var(--muted);font-size:13px">0</div>
+              </div>
+            </div>
+
+            <a id="profileLink" href="#" role="menuitem"><span class="material-symbols-rounded">person</span> Profile</a>
+            <a id="settingsLink" href="/settings/" role="menuitem"><span class="material-symbols-rounded">settings</span> Settings</a>
+            <button id="logoutBtn" type="button" role="menuitem"><span class="material-symbols-rounded">logout</span> Logout</button>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="create" role="main">
+    <div class="card container" aria-labelledby="createTitle">
+      <div class="left">
+        <h2 id="createTitle">Create new item</h2>
+        <p class="muted">Choose what you want to create. Costs are shown per item. After creation you'll be redirected to the item page.</p>
+
+        <div class="select-grid" role="list" aria-label="Create options">
+          <label class="option" data-type="countdown" role="listitem">
+            <input type="radio" name="type" value="countdown" />
+            <div class="icon">⏱</div>
+            <div class="meta">
+              <div class="title">Countdown</div>
+              <div class="desc">Retro countdown timer — **cost: 2 coins**</div>
+            </div>
+          </label>
+
+          <label class="option" data-type="clock" role="listitem">
+            <input type="radio" name="type" value="clock" />
+            <div class="icon">🕒</div>
+            <div class="meta">
+              <div class="title">Clock</div>
+              <div class="desc">Custom clock widget — **cost: 8 coins**</div>
+            </div>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label class="small">Name</label>
+          <input id="itemName" type="text" placeholder="My Retro Countdown" />
+        </div>
+
+        <div class="actions">
+          <button id="createBtn" class="btn" type="button">Create</button>
+          <a id="createNewLink" class="btn ghost" href="/dashboard/create_new?type=countdown">Open create_new</a>
+          <div id="createStatus" style="margin-left:8px;color:var(--muted);font-weight:700"></div>
+        </div>
+
+        <div id="notice" class="notice" role="status" aria-live="polite" style="display:none"></div>
+      </div>
+
+      <aside class="right">
+        <div class="summary">
+          <div style="font-weight:800;margin-bottom:8px">Summary</div>
+          <div class="row"><div class="status">Selected</div><div id="selType">—</div></div>
+          <div class="row"><div class="status">Name</div><div id="selName">—</div></div>
+          <div class="row"><div class="status">Cost</div><div id="selCost">—</div></div>
+        </div>
+
+        <div class="summary">
+          <div style="font-weight:800;margin-bottom:8px">Account</div>
+          <div class="row"><div class="status">Username</div><div id="sideName">—</div></div>
+          <div class="row"><div class="status">Email</div><div id="sideEmail">—</div></div>
+          <div class="row"><div class="status">Coins</div><div id="sideCoins">0</div></div>
+        </div>
+
+        <div class="summary">
+          <div style="font-weight:800;margin-bottom:8px">Help</div>
+          <div style="color:var(--muted);font-size:13px">Creating a countdown costs 2 coins. Creating a clock costs 8 coins. If you don't have enough coins you'll see an error.</div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer style="padding:18px 20px;border-top:1px solid rgba(10,20,40,0.03);background:transparent">
+    <div class="container" style="display:flex;justify-content:space-between;color:var(--muted);font-size:14px">
+      <div>© <span id="currentYear">2024</span> RetroCountdowns</div>
+      <div class="muted">Light theme • Create</div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      runTransaction,
+      collection,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7bEfHo9L7qM9HDivs6dA4yCiqXQF3DXo",
+      authDomain: "retrocountdowns-30d73.firebaseapp.com",
+      projectId: "retrocountdowns-30d73",
+      storageBucket: "retrocountdowns-30d73.firebasestorage.app",
+      messagingSenderId: "259195261216",
+      appId: "1:259195261216:web:68d1d507ace6ee3f144745"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // UI elements
+    const options = Array.from(document.querySelectorAll('.option'));
+    const itemNameInput = document.getElementById('itemName');
+    const createBtn = document.getElementById('createBtn');
+    const createStatus = document.getElementById('createStatus');
+    const notice = document.getElementById('notice');
+    const selTypeEl = document.getElementById('selType');
+    const selNameEl = document.getElementById('selName');
+    const selCostEl = document.getElementById('selCost');
+
+    const sideName = document.getElementById('sideName');
+    const sideEmail = document.getElementById('sideEmail');
+    const sideCoins = document.getElementById('sideCoins');
+    const menuCoins = document.getElementById('menuCoins');
+    const menuUsername = document.getElementById('menuUsername');
+    const navUsername = document.getElementById('navUsername');
+    const profileAvatar = document.getElementById('profileAvatar');
+
+    const profileBtn = document.getElementById('profileBtn');
+    const profileMenu = document.getElementById('profileMenu');
+    const profileLink = document.getElementById('profileLink');
+    const settingsLink = document.getElementById('settingsLink');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    let selectedType = null;
+    let currentUser = null;
+    let accountDoc = null;
+
+    // Costs
+    const COSTS = { countdown: 2, clock: 8 };
+
+    // Option selection handling
+    options.forEach(opt => {
+      opt.addEventListener('click', () => {
+        options.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        const type = opt.dataset.type;
+        selectedType = type;
+        // set radio
+        const radio = opt.querySelector('input[type="radio"]');
+        if(radio) radio.checked = true;
+        updateSummary();
+      });
+    });
+
+    function updateSummary(){
+      selTypeEl.textContent = selectedType ? (selectedType.charAt(0).toUpperCase() + selectedType.slice(1)) : '—';
+      selNameEl.textContent = itemNameInput.value.trim() || '—';
+      selCostEl.textContent = selectedType ? `${COSTS[selectedType]} coins` : '—';
+    }
+
+    itemNameInput.addEventListener('input', updateSummary);
+
+    // Profile menu toggle
+    let menuOpen = false;
+    profileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menuOpen = !menuOpen;
+      profileMenu.style.display = menuOpen ? 'block' : 'none';
+      profileBtn.setAttribute('aria-expanded', String(menuOpen));
+    });
+    window.addEventListener('click', () => {
+      if(menuOpen){
+        menuOpen = false;
+        profileMenu.style.display = 'none';
+        profileBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', async () => {
+      try{
+        await signOut(auth);
+        window.location.href = '/';
+      }catch(err){
+        console.error('Logout failed', err);
+        window.location.href = '/401.html';
+      }
+    });
+
+    // Profile link
+    profileLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const uid = profileLink.dataset.uid;
+      if(uid) window.location.href = `/user/${uid}`;
+    });
+
+    // Create flow
+    createBtn.addEventListener('click', async () => {
+      notice.style.display = 'none';
+      createStatus.textContent = '';
+      const name = itemNameInput.value.trim();
+      if(!selectedType){
+        notice.textContent = 'Please select an item to create.';
+        notice.style.display = 'block';
+        return;
+      }
+      if(!name){
+        notice.textContent = 'Please enter a name for your item.';
+        notice.style.display = 'block';
+        return;
+      }
+      const cost = COSTS[selectedType] || 0;
+
+      createStatus.textContent = 'Authenticating...';
+      createBtn.disabled = true;
+
+      try{
+        // run transaction: check coins, deduct, create doc
+        const uid = currentUser.uid;
+        const accountsRef = doc(db, 'accounts', uid);
+
+        const collectionName = (selectedType === 'clock') ? 'clocks' : 'countdowns';
+
+        const newId = await runTransaction(db, async (tx) => {
+          const accSnap = await tx.get(accountsRef);
+          if(!accSnap.exists()){
+            throw new Error('Account document not found');
+          }
+          const accData = accSnap.data();
+          const coins = Number(accData.coins || 0);
+          if(coins < cost){
+            const err = new Error('INSUFFICIENT_COINS');
+            err.code = 'INSUFFICIENT_COINS';
+            throw err;
+          }
+          const newDocRef = doc(collection(db, collectionName)); // generates id
+          const itemId = newDocRef.id;
+          // prepare doc data
+          const docData = {
+            itemId,
+            name,
+            ownerId: uid,
+            type: selectedType,
+            createdAt: serverTimestamp()
+          };
+          // update account coins and write new doc atomically
+          tx.update(accountsRef, { coins: coins - cost });
+          tx.set(newDocRef, docData);
+          return itemId;
+        });
+
+        // success
+        createStatus.textContent = 'Success';
+        // redirect to appropriate page with query params
+        const encodedName = encodeURIComponent(name);
+        if(selectedType === 'clock'){
+          window.location.href = `/clock/?id=${newId}&name=${encodedName}`;
+        } else {
+          window.location.href = `/countdown/?id=${newId}&name=${encodedName}`;
+        }
+      }catch(err){
+        console.error('Create failed', err);
+        if(err && err.code === 'INSUFFICIENT_COINS'){
+          notice.textContent = 'Not enough coins to create this item. Earn or buy more coins.';
+          notice.style.display = 'block';
+          createStatus.textContent = '';
+        } else if(err.message && err.message.includes('Account document not found')){
+          // account missing — show message and redirect to 401 after short delay
+          notice.textContent = 'Account not found. Redirecting to sign in.';
+          notice.style.display = 'block';
+          setTimeout(() => window.location.href = '/401.html', 900);
+        } else {
+          notice.textContent = 'Something went wrong while creating the item. Try again later.';
+          notice.style.display = 'block';
+          // optional: redirect to 401 for auth issues
+        }
+        createBtn.disabled = false;
+      }
+    });
+
+    // Auth & load account
+    onAuthStateChanged(auth, async (user) => {
+      if(!user){
+        window.location.href = '/401.html';
+        return;
+      }
+      currentUser = user;
+      try{
+        const uid = user.uid;
+        // load account doc
+        const accRef = doc(db, 'accounts', uid);
+        const accSnap = await getDoc(accRef);
+        let acc = null;
+        if(accSnap.exists()){
+          acc = accSnap.data();
+        } else {
+          // fallback to users collection
+          const userRef = doc(db, 'users', uid);
+          const userSnap = await getDoc(userRef);
+          if(userSnap.exists()) acc = userSnap.data();
+        }
+
+        const username = (acc && acc.username) ? acc.username : (user.displayName || (user.email ? user.email.split('@')[0] : 'User'));
+        const email = (acc && acc.email) ? acc.email : (user.email || '');
+        const coins = (acc && typeof acc.coins !== 'undefined') ? Number(acc.coins) : 0;
+
+        // update UI
+        navUsername.textContent = username;
+        menuUsername.textContent = username;
+        profileAvatar.textContent = (username[0] || 'U').toUpperCase();
+        sideName.textContent = username;
+        sideEmail.textContent = email;
+        sideCoins.textContent = coins;
+        menuCoins.textContent = coins;
+        profileLink.dataset.uid = uid;
+
+        // update summary
+        updateSummary();
+
+      }catch(err){
+        console.error('Failed to load account', err);
+        // show error but do not immediately redirect
+        notice.textContent = 'Could not load account data. Try refreshing.';
+        notice.style.display = 'block';
+      }
+    });
+
+    // Footer year
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
