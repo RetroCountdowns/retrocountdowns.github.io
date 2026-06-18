@@ -524,7 +524,7 @@
         console.error(err);
         showError('Something went wrong');
         showAuthMessage(err.message || 'Registration failed', true);
-        setTimeout(() => { window.location.href = '/401.html'; }, 1400);
+        setTimeout(() => { window.location.href = '/error?code=401'; }, 1400);
       }
     });
 
