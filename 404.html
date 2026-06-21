@@ -1,275 +1,144 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en-US">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>retrocountdowns.github.io | 521: Web server is down</title>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+    body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif; color: #404040; background-color: #ffffff; font-size: 15px; line-height: 1.5; }
+    .cf-error-details-wrapper { background: #f2f2f2; border-bottom: 1px solid #e0e0e0; padding: 40px 0 20px 0; }
+    .cf-wrapper { width: 90%; max-width: 980px; margin: 0 auto; position: relative; }
+    h1 { font-size: 40px; line-height: 48px; font-weight: 300; margin: 0 0 4px 0; color: #404040; }
+    .cf-error-type { font-weight: 400; color: #8c8c8c; display: inline-block; font-size: 15px; vertical-align: middle; background: #eee; border: 1px solid #e0e0e0; padding: 2px 8px; border-radius: 4px; margin-left: 10px; }
+    .cf-error-overview { margin-bottom: 25px; font-size: 16px; color: #404040; }
+    
+    /* Sekcja Statusu / Diagram */
+    .cf-status-display { display: flex; justify-content: space-between; align-items: center; padding: 30px 0; text-align: center; }
+    .cf-status-item { flex: 1; position: relative; }
+    .cf-status-item .icon { width: 72px; height: 72px; margin: 0 auto 15px auto; display: block; background-repeat: no-repeat; background-position: center; background-size: contain; }
+    
+    /* Prawdziwe, pełne ikony SVG zakodowane w CSS */
+    .icon-browser { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='72' height='72' viewBox='0 0 24 24' fill='none' stroke='%23999999' stroke-width='1'%3E%3Crect x='2' y='3' width='20' height='14' rx='2'/%3E%3Cline x1='2' y1='7' x2='22' y2='7'/%3E%3Cpath d='M12 17v4M8 21h8'/%3E%3C/svg%3E"); }
+    .icon-cloud { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='72' height='72' viewBox='0 0 24 24' fill='none' stroke='%23999999' stroke-width='1'%3E%3Cpath d='M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z'/%3E%3C/svg%3E"); }
+    .icon-server { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='72' height='72' viewBox='0 0 24 24' fill='none' stroke='%23999999' stroke-width='1'%3E%3Crect x='2' y='2' width='20' height='8' rx='2'/%3E%3Crect x='2' y='14' width='20' height='8' rx='2'/%3E%3Cline x1='6' y1='6' x2='6.01' y2='6'/%3E%3Cline x1='6' y1='18' x2='6.01' y2='18'/%3E%3C/svg%3E"); }
+    
+    /* Znaczniki stanu (ptaszki i krzyżyk) */
+    .status-badge { position: absolute; top: 48px; left: 56%; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .badge-ok { background: #4db3a2; }
+    .badge-error { background: #c94040; }
+    .status-badge svg { width: 12px; height: 12px; fill: white; }
 
-  <!-- Hidden metadata not shown in the UI -->
-  <meta name="planned-date" content="2026-06-19" />
-  <meta name="start-timestamp" content="2026-06-08T22:15:00+02:00" />
+    .cf-status-label { font-size: 18px; font-weight: 400; color: #404040; margin-bottom: 2px; }
+    .cf-status-name { font-size: 14px; color: #8c8c8c; }
+    .status-ok { color: #4db3a2 !important; }
+    .status-fail { color: #c94040 !important; }
 
-  <!-- Machine-readable JSON-LD (also hidden from normal UI) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Coming Soon",
-    "startTimestamp": "2026-06-08T22:15:00+02:00",
-    "plannedDate": "2026-06-19"
-  }
-  </script>
+    /* Strzałki połączeń */
+    .cf-status-arrow { width: 60px; height: 2px; background: #e0e0e0; margin-bottom: 40px; position: relative; }
+    .cf-status-arrow::before, .cf-status-arrow::after { content: ''; position: absolute; top: -4px; width: 0; height: 0; border-style: solid; }
+    .cf-status-arrow::before { left: 0; border-width: 5px 6px 5px 0; border-color: transparent #e0e0e0 transparent transparent; }
+    .cf-status-arrow::after { right: 0; border-width: 5px 0 5px 6px; border-color: transparent transparent transparent #e0e0e0; }
 
-  <!-- Favicon: simple green leaf SVG as data URI -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2317a34a'/%3E%3Cpath d='M20 36c6-12 20-18 28-18-6 10-12 22-28 28 2-6 0-10 0-10z' fill='%23fff' opacity='0.12'/%3E%3C/svg%3E" />
+    /* Dolna zawartość opisowa */
+    .cf-section { padding: 40px 0; border-bottom: 1px solid #e0e0e0; }
+    .cf-columns { display: flex; gap: 40px; }
+    .cf-column { flex: 1; }
+    h2 { font-size: 22px; font-weight: 300; margin-top: 0; color: #404040; }
+    p { color: #404040; font-size: 15px; margin: 0 0 15px 0; }
+    a { color: #0051c3; text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-  <title>Coming Soon</title>
+    /* Stopka danych diagnostycznych */
+    .cf-error-footer { padding: 20px 0; font-size: 12px; color: #8c8c8c; }
+    .cf-footer-item { display: inline-block; margin-right: 15px; }
+    .cf-footer-separator { color: #e0e0e0; margin-right: 15px; }
 
-  <style>
-    :root{
-      --bg:#f7fbf8;
-      --card:#ffffff;
-      --muted:#6b7280;
-      --accent-start:#2ecc71;
-      --accent-end:#16a34a;
-      --shadow: 0 8px 24px rgba(18, 38, 22, 0.06);
-      --radius:14px;
-      --glass: rgba(255,255,255,0.6);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    @media (max-width: 768px) {
+        .cf-status-display { flex-direction: column; gap: 20px; }
+        .cf-status-arrow { display: none; }
+        .cf-columns { flex-direction: column; gap: 20px; }
+        .status-badge { left: 52%; top: 48px; }
     }
-
-    html,body{
-      height:100%;
-      margin:0;
-      background: linear-gradient(180deg, var(--bg), #ffffff);
-      color:#0f172a;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-
-    .wrap{
-      min-height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:48px 20px;
-    }
-
-    .card{
-      width:100%;
-      max-width:920px;
-      background:var(--card);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:36px;
-      display:grid;
-      grid-template-columns: 1fr 320px;
-      gap:28px;
-      align-items:center;
-    }
-
-    .left{
-      padding-right:8px;
-    }
-
-    h1{
-      margin:0 0 8px 0;
-      font-size:28px;
-      letter-spacing:-0.02em;
-    }
-
-    p.lead{
-      margin:0 0 22px 0;
-      color:var(--muted);
-      font-size:15px;
-      line-height:1.5;
-    }
-
-    .progress-wrap{
-      background: linear-gradient(180deg, rgba(22,163,74,0.06), rgba(22,163,74,0.02));
-      padding:18px;
-      border-radius:12px;
-      border:1px solid rgba(16,185,129,0.06);
-    }
-
-    .bar{
-      height:18px;
-      background: linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01));
-      border-radius:10px;
-      padding:3px;
-      box-sizing:border-box;
-    }
-
-    .bar-inner{
-      height:100%;
-      width:0%;
-      border-radius:8px;
-      background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
-      box-shadow: 0 6px 18px rgba(22,163,74,0.18), inset 0 -6px 12px rgba(255,255,255,0.06);
-      transition: width 1.2s cubic-bezier(.2,.9,.2,1);
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      padding-right:10px;
-      color:white;
-      font-weight:600;
-      font-size:13px;
-      letter-spacing:0.01em;
-    }
-
-    .meta{
-      margin-top:12px;
-      display:flex;
-      gap:12px;
-      color:var(--muted);
-      font-size:13px;
-      align-items:center;
-    }
-
-    .right{
-      text-align:center;
-      padding-left:8px;
-    }
-
-    .logo{
-      width:84px;
-      height:84px;
-      margin:0 auto 14px auto;
-      border-radius:18px;
-      background: linear-gradient(135deg, rgba(22,163,74,0.12), rgba(16,185,129,0.06));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow: 0 6px 18px rgba(16,185,129,0.06);
-    }
-
-    .logo svg{ width:44px; height:44px; }
-
-    .countdown{
-      margin-top:8px;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .small{
-      font-size:12px;
-      color:#94a3b8;
-    }
-
-    @media (max-width:880px){
-      .card{ grid-template-columns: 1fr; padding:24px; gap:18px; }
-      .right{ order:-1; }
-    }
-  </style>
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <main class="card" role="main" aria-labelledby="coming-title">
-      <section class="left" aria-hidden="false">
-        <h1 id="coming-title">We are launching soon</h1>
-        <p class="lead">Thanks for your patience. We are building something great and will be ready shortly. Below is the current progress of our work.</p>
 
-        <div class="progress-wrap" aria-label="Project progress">
-          <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <div id="barInner" class="bar-inner">0.00%</div>
-          </div>
-
-          <div class="meta">
-            <div><strong>Status</strong> <span class="small" id="statusText">Not started</span></div>
-            <div><strong>Started</strong> <span class="small" id="startText">Today 22:15</span></div>
-          </div>
+<div class="cf-error-details-wrapper">
+    <div class="cf-wrapper">
+        <div class="cf-error-overview">
+            <h1>Web server is down <span class="cf-error-type">Error 521</span></h1>
+            <p>Visit <a href="https://cloudflare.com" target="_blank">cloudflare.com</a> for more information.</p>
+            <p style="font-size: 13px; color: #8c8c8c; margin-top: 5px;">2026-06-21 18:51:22 UTC</p>
         </div>
 
-        <p class="small" style="margin-top:14px;">Subscribe for updates or check back later to see progress.</p>
-      </section>
+        <!-- Diagram Połączenia Cloudflare -->
+        <div class="cf-status-display">
+            <!-- Krok 1: Przeglądarka -->
+            <div class="cf-status-item">
+                <span class="icon icon-browser"></span>
+                <div class="status-badge badge-ok">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+                <div class="cf-status-label">You</div>
+                <div class="cf-status-name status-ok">Browser Working</div>
+            </div>
 
-      <aside class="right" aria-hidden="false">
-        <div class="logo" aria-hidden="true">
-          <!-- small decorative SVG -->
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 2C8 6 6 9 6 12.5S8.5 20 12 22c3.5-2 6-6 6-9.5S16 6 12 2z" fill="#16a34a"/>
-            <path d="M9 12c1-3 4-5 6-6" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+            <div class="cf-status-arrow"></div>
+
+            <!-- Krok 2: Cloudflare -->
+            <div class="cf-status-item">
+                <span class="icon icon-cloud"></span>
+                <div class="status-badge badge-ok">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+                <div class="cf-status-label">Warsaw</div>
+                <div class="cf-status-name status-ok">Cloudflare Working</div>
+            </div>
+
+            <div class="cf-status-arrow"></div>
+
+            <!-- Krok 3: Serwer docelowy -->
+            <div class="cf-status-item">
+                <span class="icon icon-server"></span>
+                <div class="status-badge badge-error">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </div>
+                <div class="cf-status-label">retrocountdowns.github.io</div>
+                <div class="cf-status-name status-fail">Host Error</div>
+            </div>
         </div>
+    </div>
+</div>
 
-        <div style="font-weight:700; font-size:18px;">Progress Tracker</div>
-        <div class="countdown" id="countdownText">Waiting to start</div>
-      </aside>
-    </main>
-  </div>
+<!-- Sekcja informacyjna dolna -->
+<div class="cf-section">
+    <div class="cf-wrapper">
+        <div class="cf-columns">
+            <div class="cf-column">
+                <h2>What happened?</h2>
+                <p>The web server is returning an unknown error. As a result, the web page is not displaying.</p>
+            </div>
+            <div class="cf-column">
+                <h2>What can I do?</h2>
+                <p><strong>If you are a visitor of this website:</strong><br>Please try again in a few minutes.</p>
+                <p><strong>If you are the owner of this website:</strong><br>Contact your hosting provider letting them know your web server is not responding. <a href="https://cloudflare.com/hc/en-us/articles/200171916-Error-521-Web-server-is-down" target="_blank">Additional troubleshooting information</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-  <script>
-    // Read hidden metadata
-    const startMeta = document.querySelector('meta[name="start-timestamp"]').content;
-    const plannedMeta = document.querySelector('meta[name="planned-date"]').content;
+<!-- Oryginalna stopka diagnostyczna -->
+<div class="cf-error-footer">
+    <div class="cf-wrapper">
+        <span class="cf-footer-item">Cloudflare Ray ID: <strong>9ab83c7d1e2f41a0</strong></span>
+        <span class="cf-footer-separator">&bull;</span>
+        <span class="cf-footer-item">Your IP: Click to reveal</span>
+        <span class="cf-footer-separator">&bull;</span>
+        <span class="cf-footer-item">Performance &amp; security by <a href="https://cloudflare.com" target="_blank">Cloudflare</a></span>
+    </div>
+</div>
 
-    const startTime = new Date(startMeta);
-    // planned date end-of-day for progress calculation
-    const plannedEnd = new Date(plannedMeta + 'T23:59:59+02:00');
-
-    const barInner = document.getElementById('barInner');
-    const statusText = document.getElementById('statusText');
-    const startText = document.getElementById('startText');
-    const countdownText = document.getElementById('countdownText');
-
-    // Format start display (visible)
-    const startDisplay = startTime.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-    startText.textContent = startDisplay;
-
-    function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
-
-    function updateProgress(){
-      const now = new Date();
-      if (now < startTime){
-        // Not started yet
-        barInner.style.width = '0%';
-        barInner.textContent = '0.00%';
-        statusText.textContent = 'Not started';
-        const diff = Math.max(0, Math.floor((startTime - now)/1000));
-        const hrs = Math.floor(diff/3600);
-        const mins = Math.floor((diff%3600)/60);
-        const secs = diff%60;
-        countdownText.textContent = `Starts in ${hrs}h ${mins}m ${secs}s`;
-        requestAnimationFrame(updateProgress);
-        return;
-      }
-
-      // After start: compute progress as fraction of time elapsed between start and planned end
-      const total = plannedEnd - startTime;
-      const elapsed = now - startTime;
-      let percent = (elapsed / total) * 100;
-      percent = clamp(percent, 0, 100);
-
-      // Keep two decimals
-      const display = percent.toFixed(2) + '%';
-      barInner.style.width = percent + '%';
-      barInner.textContent = display;
-
-      // Status text
-      if (percent < 1) statusText.textContent = 'Just started';
-      else if (percent < 30) statusText.textContent = 'In progress';
-      else if (percent < 70) statusText.textContent = 'Making good progress';
-      else if (percent < 100) statusText.textContent = 'Nearly there';
-      else statusText.textContent = 'Complete';
-
-      // Countdown to planned date (visible)
-      const remaining = Math.max(0, Math.floor((plannedEnd - now)/1000));
-      const days = Math.floor(remaining / 86400);
-      const hours = Math.floor((remaining % 86400) / 3600);
-      const minutes = Math.floor((remaining % 3600) / 60);
-      countdownText.textContent = `Estimated completion in ${days}d ${hours}h ${minutes}m`;
-
-      // Update again every 1.5s for smoothness
-      setTimeout(updateProgress, 1500);
-    }
-
-    // Initialize: show 0.00% until start time
-    barInner.style.width = '0%';
-    barInner.textContent = '0.00%';
-    statusText.textContent = 'Not started';
-    countdownText.textContent = 'Waiting to start';
-
-    // Start the update loop
-    updateProgress();
-  </script>
 </body>
 </html>
