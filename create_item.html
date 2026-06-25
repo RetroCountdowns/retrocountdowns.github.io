@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Countdown — RetroCountdowns</title>
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#1a1a27;--ink-soft:#4e4e5e;--ink-mute:#8b8b9b;--ink-faint:#c4c4d0;--gold:#c5892e;--gold-dark:#a06e1e;--gold-mid:#d99a40;--gold-light:#fef1d5;--gold-border:#f0d8a0;--surface:#fafaf7;--surface-2:#f4f2eb;--surface-3:#ece9e0;--border:#e5e1d7;--border-soft:#edebe4;--white:#ffffff;--display-bg:#10101e;--display-amber:#e8a030;--display-glow:rgba(232,160,48,0.38);--display-dim:rgba(232,160,48,0.32);--green:#22935d;--green-bg:#e8f5ee;--red:#cc3d3d;--red-bg:#faeaea;--blue:#3474cc;--blue-bg:#eaf1fc;--orange:#d4731e;--orange-bg:#fef0e0;--r0:4px;--r1:8px;--r2:12px;--r3:16px;--r4:20px;--r5:28px;--r-full:9999px;--s1:0 1px 2px rgba(26,26,39,0.05);--s2:0 2px 8px rgba(26,26,39,0.07),0 1px 2px rgba(26,26,39,0.04);--s3:0 4px 16px rgba(26,26,39,0.09),0 2px 4px rgba(26,26,39,0.05);--s4:0 8px 32px rgba(26,26,39,0.11),0 4px 8px rgba(26,26,39,0.05);--s5:0 20px 60px rgba(26,26,39,0.14);--s-gold:0 8px 28px rgba(197,137,46,0.22);--ff-display:'DM Serif Display',Georgia,serif;--ff-body:'Inter',system-ui,sans-serif;--ff-mono:'Space Mono','Courier New',monospace;--ease:cubic-bezier(.4,0,.2,1);--t1:140ms;--t2:220ms;--t3:340ms;--nav-h:68px;--max-w:1220px;--sidebar-w:240px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    body{font-family:var(--ff-body);background:var(--surface);color:var(--ink);line-height:1.65;font-size:16px;min-height:100vh}
+    img,svg{display:block;max-width:100%}
+    a{color:inherit;text-decoration:none}
+    ul,ol{list-style:none}
+    button{cursor:pointer;border:none;background:none;font-family:inherit}
+    input,select,textarea{font-family:inherit;color:var(--ink)}
+    .c{width:100%;max-width:var(--max-w);margin:0 auto;padding:0 28px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:var(--r2);font-size:0.9375rem;font-weight:600;line-height:1;white-space:nowrap;transition:all var(--t2) var(--ease);cursor:pointer;border:1.5px solid transparent}
+    .btn:disabled{opacity:0.55;cursor:not-allowed;transform:none !important}
+    .btn-primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .btn-primary:hover:not(:disabled){background:#2a2a3a;transform:translateY(-1px);box-shadow:var(--s3)}
+    .btn-gold{background:var(--gold);color:#fff;border-color:var(--gold)}
+    .btn-gold:hover:not(:disabled){background:var(--gold-dark);transform:translateY(-1px);box-shadow:var(--s-gold)}
+    .btn-outline{background:transparent;color:var(--ink);border-color:var(--border)}
+    .btn-outline:hover{border-color:var(--ink);background:var(--white)}
+    .btn-ghost{background:transparent;color:var(--ink-soft);border-color:transparent}
+    .btn-ghost:hover{background:var(--surface-2);color:var(--ink)}
+    .btn-sm{padding:7px 15px;font-size:0.8125rem;border-radius:var(--r1)}
+    .btn-lg{padding:13px 26px;font-size:1rem;border-radius:var(--r3)}
+    .btn-full{width:100%}
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:var(--r-full);font-size:0.72rem;font-weight:700;letter-spacing:.03em;line-height:1.5}
+    .badge-gold{background:var(--gold-light);color:var(--gold-dark)}
+    .badge-green{background:var(--green-bg);color:var(--green)}
+    .badge-blue{background:var(--blue-bg);color:var(--blue)}
+    .badge-neutral{background:var(--surface-3);color:var(--ink-soft)}
+    .badge-orange{background:var(--orange-bg);color:var(--orange)}
+    .card{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);box-shadow:var(--s2);overflow:hidden}
+    .countdown-display{background:var(--display-bg);border-radius:var(--r2);padding:12px 6px;display:flex;align-items:center;justify-content:center;gap:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.04),inset 0 2px 8px rgba(0,0,0,0.25)}
+    .cd-unit{display:flex;flex-direction:column;align-items:center;padding:0 8px}
+    .cd-val{font-family:var(--ff-mono);font-weight:700;font-size:1.5rem;line-height:1;color:var(--display-amber);text-shadow:0 0 28px var(--display-glow),0 0 10px rgba(232,160,48,0.25),0 0 3px rgba(232,160,48,0.5);letter-spacing:.04em;min-width:2.2ch;text-align:center}
+    .cd-lbl{font-size:0.52rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--display-dim);margin-top:4px}
+    .cd-sep{font-family:var(--ff-mono);font-size:1.2rem;color:var(--display-amber);opacity:.35;line-height:1;margin-bottom:16px;padding:0 1px}
+    .flex{display:flex}.items-center{align-items:center}.items-start{align-items:flex-start}.justify-between{justify-content:space-between}.gap-4{gap:4px}.gap-6{gap:6px}.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}.flex-1{flex:1}.flex-col{flex-direction:column}
+    /* NAV */
+    .site-header{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(255,255,255,0.96);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border-soft)}
+    .nav-inner{display:flex;align-items:center;height:var(--nav-h)}
+    .nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:0.9375rem;color:var(--ink);margin-right:auto;flex-shrink:0}
+    .nav-brand img{width:34px;height:34px;border-radius:var(--r1)}
+    .nav-actions{display:flex;align-items:center;gap:10px}
+    .nav-notif-btn{width:38px;height:38px;border-radius:var(--r1);display:flex;align-items:center;justify-content:center;color:var(--ink-soft);position:relative;transition:all var(--t1) var(--ease)}
+    .nav-notif-btn:hover{background:var(--surface-2);color:var(--ink)}
+    .notif-dot{position:absolute;top:8px;right:8px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid var(--white)}
+    .nav-avatar-btn{width:36px;height:36px;border-radius:50%;background:var(--gold-light);color:var(--gold-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;cursor:pointer;border:2px solid var(--gold-border);transition:border-color var(--t1) var(--ease);flex-shrink:0}
+    .nav-avatar-btn:hover{border-color:var(--gold)}
+    .sidebar-toggle-btn{display:none;flex-direction:column;gap:5px;padding:8px;border-radius:var(--r1);margin-right:4px}
+    .sidebar-toggle-btn span{width:22px;height:2px;background:var(--ink);border-radius:1px;display:block}
+    /* APP LAYOUT */
+    .app-wrap{display:flex;min-height:calc(100vh - var(--nav-h))}
+    .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--white);border-right:1px solid var(--border);position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;display:flex;flex-direction:column;z-index:50;transition:transform var(--t2) var(--ease)}
+    .sidebar-inner{padding:16px 10px;flex:1}
+    .sidebar-sect{font-size:0.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute);padding:0 12px;margin:20px 0 6px}
+    .sidebar-sect:first-child{margin-top:4px}
+    .sidebar-link{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r1);font-size:0.875rem;font-weight:500;color:var(--ink-soft);transition:all var(--t1) var(--ease);width:100%;cursor:pointer;text-align:left;border:none;background:none;font-family:inherit}
+    .sidebar-link:hover{background:var(--surface-2);color:var(--ink)}
+    .sidebar-link.active{background:var(--gold-light);color:var(--gold-dark);font-weight:600}
+    .sidebar-link svg{flex-shrink:0;opacity:0.65}
+    .sidebar-link.active svg{opacity:1}
+    .sidebar-bottom{padding:16px 10px;border-top:1px solid var(--border-soft)}
+    .app-main{flex:1;min-width:0;padding:32px;background:var(--surface)}
+    /* FORM CONTROLS */
+    .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
+    .form-group:last-child{margin-bottom:0}
+    .form-label{font-size:0.875rem;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:6px}
+    .form-label .req{color:var(--red);font-size:0.8rem}
+    .form-hint{font-size:0.78rem;color:var(--ink-mute);line-height:1.5}
+    .form-hint.error{color:var(--red)}
+    .form-control{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:0.9375rem;background:var(--white);outline:none;transition:border-color var(--t1) var(--ease),box-shadow var(--t1) var(--ease);color:var(--ink)}
+    .form-control::placeholder{color:var(--ink-mute)}
+    .form-control:hover:not(:focus){border-color:var(--ink-faint)}
+    .form-control:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(197,137,46,0.11)}
+    .form-control.is-error{border-color:var(--red)}
+    .form-control.is-error:focus{box-shadow:0 0 0 3px rgba(204,61,61,0.11)}
+    textarea.form-control{resize:vertical;min-height:88px;line-height:1.6}
+    select.form-control{appearance:none;cursor:pointer;background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b8b9b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:36px}
+    .input-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .char-counter{font-size:0.72rem;color:var(--ink-mute);text-align:right;margin-top:2px}
+    .char-counter.near{color:var(--orange)}
+    .char-counter.over{color:var(--red)}
+    /* FORM SECTIONS */
+    .form-section{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);box-shadow:var(--s1);margin-bottom:16px}
+    .form-section-header{padding:18px 22px 14px;border-bottom:1px solid var(--border-soft);display:flex;align-items:center;gap:10px}
+    .form-section-icon{width:32px;height:32px;border-radius:var(--r1);display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0}
+    .form-section-title{font-weight:700;font-size:0.9375rem;color:var(--ink)}
+    .form-section-sub{font-size:0.78rem;color:var(--ink-mute);margin-top:1px}
+    .form-section-body{padding:20px 22px}
+    /* EMOJI GRID */
+    .emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+    .emoji-btn{width:100%;aspect-ratio:1;border-radius:var(--r1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:1.5px solid transparent;cursor:pointer;transition:all var(--t1) var(--ease);background:var(--surface-2)}
+    .emoji-btn:hover{background:var(--gold-light);border-color:var(--gold-border)}
+    .emoji-btn.sel{border-color:var(--gold);background:var(--gold-light);box-shadow:0 0 0 3px rgba(197,137,46,0.14)}
+    /* COLOR SWATCHES */
+    .color-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .color-swatch{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:all var(--t1) var(--ease);flex-shrink:0;position:relative}
+    .color-swatch:hover{transform:scale(1.15)}
+    .color-swatch.sel::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid currentColor;opacity:0.5}
+    .color-swatch.sel{transform:scale(1.1)}
+    /* VISIBILITY */
+    .vis-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .vis-option{cursor:pointer;display:block}
+    .vis-option input{position:absolute;opacity:0;width:0;height:0}
+    .vis-card{border:1.5px solid var(--border);border-radius:var(--r2);padding:14px 16px;transition:all var(--t1) var(--ease);background:var(--white)}
+    .vis-option:hover .vis-card{border-color:var(--ink-faint);background:var(--surface)}
+    .vis-option input:checked + .vis-card{border-color:var(--gold);background:var(--gold-light);box-shadow:0 0 0 3px rgba(197,137,46,0.11)}
+    .vis-icon{font-size:1.2rem;margin-bottom:6px;display:block}
+    .vis-title{font-weight:700;font-size:0.9rem;display:block;margin-bottom:2px}
+    .vis-desc{font-size:0.75rem;color:var(--ink-mute);line-height:1.4}
+    /* TOGGLE */
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
+    .toggle-row + .toggle-row{border-top:1px solid var(--border-soft)}
+    .toggle-info .t-title{font-weight:600;font-size:0.9rem}
+    .toggle-info .t-desc{font-size:0.78rem;color:var(--ink-mute);margin-top:2px}
+    .tog{position:relative;display:inline-block;width:42px;height:23px;cursor:pointer;flex-shrink:0}
+    .tog input{opacity:0;width:0;height:0;position:absolute}
+    .tog-track{position:absolute;inset:0;background:var(--surface-3);border-radius:var(--r-full);transition:background var(--t1) var(--ease)}
+    .tog-thumb{position:absolute;top:3px;left:3px;width:17px;height:17px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.18);transition:left var(--t1) var(--ease)}
+    .tog input:checked + .tog-track{background:var(--gold)}
+    .tog input:checked ~ .tog-thumb{left:22px}
+    /* CREATE LAYOUT */
+    .page-header{margin-bottom:28px}
+    .page-back{display:inline-flex;align-items:center;gap:6px;font-size:0.8125rem;font-weight:600;color:var(--ink-mute);margin-bottom:14px;transition:color var(--t1) var(--ease)}
+    .page-back:hover{color:var(--ink)}
+    .page-title{font-family:var(--ff-display);font-size:1.9rem;line-height:1.15;color:var(--ink);margin-bottom:4px}
+    .page-sub{font-size:0.9rem;color:var(--ink-mute)}
+    .create-grid{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+    /* PREVIEW */
+    .preview-sticky{position:sticky;top:calc(var(--nav-h) + 24px)}
+    .preview-label{font-size:0.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:10px}
+    .prev-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);box-shadow:var(--s3);overflow:hidden}
+    .prev-head{padding:16px 18px 12px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+    .prev-icon-wrap{display:flex;align-items:center;gap:10px}
+    .prev-icon{width:36px;height:36px;border-radius:var(--r1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;background:var(--gold-light)}
+    .prev-title{font-weight:700;font-size:0.9rem;color:var(--ink);line-height:1.3}
+    .prev-date{font-size:0.72rem;color:var(--ink-mute);margin-top:2px}
+    .prev-display{padding:2px 14px 14px}
+    .prev-foot{padding:11px 18px;border-top:1px solid var(--border-soft);display:flex;align-items:center;justify-content:space-between}
+    .checklist{margin-top:14px;background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:14px 16px;box-shadow:var(--s1)}
+    .checklist-title{font-size:0.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:10px}
+    .check-item{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:0.8125rem}
+    .check-item + .check-item{border-top:1px solid var(--border-soft)}
+    .check-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all var(--t1) var(--ease)}
+    .check-dot.done{background:var(--green);border-color:var(--green)}
+    .check-dot.done::after{content:'';width:8px;height:6px;display:block;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 6'%3E%3Cpolyline points='1 3 3 5 7 1' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E") no-repeat center}
+    .check-text{color:var(--ink-soft)}
+    .check-text.done{color:var(--ink);font-weight:500}
+    /* SUBMIT AREA */
+    .submit-bar{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:var(--s1)}
+    .submit-note{font-size:0.8rem;color:var(--ink-mute);line-height:1.5}
+    /* TOAST */
+    .toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;border-radius:var(--r2);padding:13px 18px;font-size:0.875rem;font-weight:500;box-shadow:var(--s4);z-index:500;display:flex;align-items:center;gap:10px;transform:translateY(80px);opacity:0;transition:all var(--t2) var(--ease)}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast.success{background:var(--green)}
+    .toast.error-t{background:var(--red)}
+    /* RESPONSIVE */
+    @media(max-width:1100px){.create-grid{grid-template-columns:1fr 320px}}
+    @media(max-width:900px){
+      .sidebar{position:fixed;top:var(--nav-h);left:0;transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+      .sidebar-toggle-btn{display:flex}
+      .app-main{padding:20px 16px}
+      .create-grid{grid-template-columns:1fr}
+      .preview-sticky{position:static}
+    }
+    @media(max-width:600px){
+      .input-row{grid-template-columns:1fr}
+      .vis-options{grid-template-columns:1fr}
+      .emoji-grid{grid-template-columns:repeat(6,1fr)}
+      .submit-bar{flex-direction:column;align-items:stretch}
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="c">
+    <div class="nav-inner">
+      <button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Toggle sidebar">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="index.html" class="nav-brand">
+        <img src="/logo.png" alt="RetroCountdowns" width="34" height="34" onerror="this.style.visibility='hidden'">
+        RetroCountdowns
+      </a>
+      <div class="nav-actions">
+        <button class="nav-notif-btn" aria-label="Notifications">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-dot"></span>
+        </button>
+        <a href="account.html" class="nav-avatar-btn" id="navAvatar" title="Account settings">AC</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="app-wrap">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+      <div class="sidebar-sect">Main</div>
+      <a href="dashboard.html" class="sidebar-link">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="create_item.html" class="sidebar-link active">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create countdown
+      </a>
+      <div class="sidebar-sect">Explore</div>
+      <a href="dashboard.html" class="sidebar-link">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+        My countdowns
+      </a>
+      <a href="dashboard.html" class="sidebar-link">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="3.27" y1="6.96" x2="20.73" y2="6.96"/><line x1="3.27" y1="17.04" x2="20.73" y2="17.04"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+        World clocks
+      </a>
+      <div class="sidebar-sect">Account</div>
+      <a href="account.html" class="sidebar-link">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Account settings
+      </a>
+      <a href="pricing.html" class="sidebar-link">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Upgrade plan
+      </a>
+    </div>
+    <div class="sidebar-bottom">
+      <button class="sidebar-link" id="signOutBtn" style="color:var(--red)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </button>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <div class="page-header">
+      <a href="dashboard.html" class="page-back">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to dashboard
+      </a>
+      <h1 class="page-title">Create New Countdown</h1>
+      <p class="page-sub">Fill in the details below and your countdown goes live instantly.</p>
+    </div>
+
+    <div class="create-grid">
+      <!-- LEFT: FORM -->
+      <div>
+        <!-- SECTION 1: Details -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-icon" style="background:var(--gold-light)">✏️</div>
+            <div>
+              <div class="form-section-title">Countdown Details</div>
+              <div class="form-section-sub">Give your countdown a name and description</div>
+            </div>
+          </div>
+          <div class="form-section-body">
+            <div class="form-group">
+              <label class="form-label" for="titleInput">Title <span class="req">*</span></label>
+              <input class="form-control" type="text" id="titleInput" placeholder="e.g. New Year 2027, Product Launch, Mom's Birthday…" maxlength="60" autocomplete="off">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="form-hint" id="titleHint">What are you counting down to?</div>
+                <div class="char-counter" id="titleCounter">0 / 60</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="descInput">Description <span style="color:var(--ink-mute);font-weight:400;font-size:0.78rem">(optional)</span></label>
+              <textarea class="form-control" id="descInput" placeholder="Add a note or context about this countdown…" maxlength="200"></textarea>
+              <div style="display:flex;justify-content:space-between">
+                <div class="form-hint">Help others understand what this moment means to you</div>
+                <div class="char-counter" id="descCounter">0 / 200</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Date & Time -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-icon" style="background:var(--blue-bg)">📅</div>
+            <div>
+              <div class="form-section-title">Target Date &amp; Time</div>
+              <div class="form-section-sub">When does the countdown end?</div>
+            </div>
+          </div>
+          <div class="form-section-body">
+            <div class="input-row">
+              <div class="form-group">
+                <label class="form-label" for="dateInput">Date <span class="req">*</span></label>
+                <input class="form-control" type="date" id="dateInput">
+                <div class="form-hint" id="dateHint">Must be a future date</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="timeInput">Time</label>
+                <input class="form-control" type="time" id="timeInput" value="00:00">
+                <div class="form-hint">Leave at 00:00 for all-day events</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tzSelect">Timezone</label>
+              <select class="form-control" id="tzSelect">
+                <option value="UTC">UTC — Coordinated Universal Time</option>
+                <option value="America/New_York">UTC−5 — Eastern Time (New York)</option>
+                <option value="America/Chicago">UTC−6 — Central Time (Chicago)</option>
+                <option value="America/Denver">UTC−7 — Mountain Time (Denver)</option>
+                <option value="America/Los_Angeles">UTC−8 — Pacific Time (Los Angeles)</option>
+                <option value="Europe/London">UTC+1 — British Summer Time (London)</option>
+                <option value="Europe/Paris">UTC+2 — Central European Time (Paris)</option>
+                <option value="Europe/Moscow">UTC+3 — Moscow Standard Time</option>
+                <option value="Asia/Dubai">UTC+4 — Gulf Standard Time (Dubai)</option>
+                <option value="Asia/Kolkata">UTC+5:30 — India Standard Time</option>
+                <option value="Asia/Shanghai">UTC+8 — China Standard Time (Shanghai)</option>
+                <option value="Asia/Tokyo">UTC+9 — Japan Standard Time (Tokyo)</option>
+                <option value="Australia/Sydney">UTC+10 — Australian Eastern Time (Sydney)</option>
+                <option value="Pacific/Auckland">UTC+12 — New Zealand Standard Time</option>
+              </select>
+              <div class="form-hint">Affects how the countdown calculates remaining time</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Appearance -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-icon" style="background:var(--orange-bg)">🎨</div>
+            <div>
+              <div class="form-section-title">Category &amp; Appearance</div>
+              <div class="form-section-sub">Choose how your countdown looks and where it belongs</div>
+            </div>
+          </div>
+          <div class="form-section-body">
+            <div class="form-group">
+              <label class="form-label" for="catSelect">Category</label>
+              <select class="form-control" id="catSelect">
+                <option value="Personal">🙂 Personal</option>
+                <option value="Work">💼 Work</option>
+                <option value="Birthday">🎂 Birthday</option>
+                <option value="Holiday">🎄 Holiday</option>
+                <option value="Sports">⚽ Sports</option>
+                <option value="Travel">✈️ Travel</option>
+                <option value="Event">🎪 Event</option>
+                <option value="Milestone">🏆 Milestone</option>
+                <option value="Education">🎓 Education</option>
+                <option value="Other">📌 Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Icon / Emoji</label>
+              <div class="emoji-grid" id="emojiGrid">
+                <button type="button" class="emoji-btn sel" data-emoji="🎉">🎉</button>
+                <button type="button" class="emoji-btn" data-emoji="🚀">🚀</button>
+                <button type="button" class="emoji-btn" data-emoji="🎂">🎂</button>
+                <button type="button" class="emoji-btn" data-emoji="🎄">🎄</button>
+                <button type="button" class="emoji-btn" data-emoji="⚽">⚽</button>
+                <button type="button" class="emoji-btn" data-emoji="✈️">✈️</button>
+                <button type="button" class="emoji-btn" data-emoji="🏆">🏆</button>
+                <button type="button" class="emoji-btn" data-emoji="🎓">🎓</button>
+                <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
+                <button type="button" class="emoji-btn" data-emoji="🌍">🌍</button>
+                <button type="button" class="emoji-btn" data-emoji="🔔">🔔</button>
+                <button type="button" class="emoji-btn" data-emoji="⏰">⏰</button>
+                <button type="button" class="emoji-btn" data-emoji="🌟">🌟</button>
+                <button type="button" class="emoji-btn" data-emoji="🎯">🎯</button>
+                <button type="button" class="emoji-btn" data-emoji="🎬">🎬</button>
+                <button type="button" class="emoji-btn" data-emoji="🎵">🎵</button>
+                <button type="button" class="emoji-btn" data-emoji="💼">💼</button>
+                <button type="button" class="emoji-btn" data-emoji="🏋️">🏋️</button>
+                <button type="button" class="emoji-btn" data-emoji="🌱">🌱</button>
+                <button type="button" class="emoji-btn" data-emoji="💡">💡</button>
+                <button type="button" class="emoji-btn" data-emoji="🎪">🎪</button>
+                <button type="button" class="emoji-btn" data-emoji="🦋">🦋</button>
+                <button type="button" class="emoji-btn" data-emoji="🎨">🎨</button>
+                <button type="button" class="emoji-btn" data-emoji="📸">📸</button>
+              </div>
+              <div class="form-hint" style="margin-top:8px">Click to select an icon for your countdown card</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Accent Color</label>
+              <div class="color-row" id="colorRow">
+                <button type="button" class="color-swatch sel" data-color="#c5892e" style="background:#c5892e;color:#c5892e" title="Gold" aria-label="Gold"></button>
+                <button type="button" class="color-swatch" data-color="#3474cc" style="background:#3474cc;color:#3474cc" title="Blue" aria-label="Blue"></button>
+                <button type="button" class="color-swatch" data-color="#22935d" style="background:#22935d;color:#22935d" title="Green" aria-label="Green"></button>
+                <button type="button" class="color-swatch" data-color="#d4731e" style="background:#d4731e;color:#d4731e" title="Orange" aria-label="Orange"></button>
+                <button type="button" class="color-swatch" data-color="#cc3d3d" style="background:#cc3d3d;color:#cc3d3d" title="Red" aria-label="Red"></button>
+                <button type="button" class="color-swatch" data-color="#7c5cbf" style="background:#7c5cbf;color:#7c5cbf" title="Purple" aria-label="Purple"></button>
+                <button type="button" class="color-swatch" data-color="#1a1a27" style="background:#1a1a27;color:#1a1a27" title="Dark" aria-label="Dark"></button>
+              </div>
+              <div class="form-hint" style="margin-top:8px">Used for the category badge and icon background</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: Visibility -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-icon" style="background:var(--green-bg)">🔒</div>
+            <div>
+              <div class="form-section-title">Visibility</div>
+              <div class="form-section-sub">Control who can see this countdown</div>
+            </div>
+          </div>
+          <div class="form-section-body">
+            <div class="vis-options">
+              <label class="vis-option">
+                <input type="radio" name="visibility" value="private" checked>
+                <div class="vis-card">
+                  <span class="vis-icon">🔒</span>
+                  <span class="vis-title">Private</span>
+                  <span class="vis-desc">Only you can view and manage this countdown</span>
+                </div>
+              </label>
+              <label class="vis-option">
+                <input type="radio" name="visibility" value="public">
+                <div class="vis-card">
+                  <span class="vis-icon">🌐</span>
+                  <span class="vis-title">Public</span>
+                  <span class="vis-desc">Anyone with the link can view this countdown</span>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 5: Notifications -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-icon" style="background:var(--blue-bg)">🔔</div>
+            <div>
+              <div class="form-section-title">Notifications</div>
+              <div class="form-section-sub">Get reminded before the countdown ends</div>
+            </div>
+          </div>
+          <div class="form-section-body">
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="t-title">Enable reminders</div>
+                <div class="t-desc">Receive a notification before this countdown reaches zero</div>
+              </div>
+              <label class="tog" aria-label="Enable reminders">
+                <input type="checkbox" id="notifToggle" checked>
+                <span class="tog-track"></span>
+                <span class="tog-thumb"></span>
+              </label>
+            </div>
+            <div id="notifOptions" style="margin-top:14px">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label" for="notifWhen">Remind me</label>
+                <select class="form-control" id="notifWhen">
+                  <option value="3600">1 hour before</option>
+                  <option value="86400" selected>1 day before</option>
+                  <option value="259200">3 days before</option>
+                  <option value="604800">1 week before</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="submit-bar">
+          <div class="submit-note">Your countdown will appear on your dashboard immediately after creation.</div>
+          <div class="flex gap-12">
+            <a href="dashboard.html" class="btn btn-ghost">Cancel</a>
+            <button class="btn btn-gold btn-lg" id="submitBtn">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Create countdown
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: PREVIEW -->
+      <div>
+        <div class="preview-sticky">
+          <div class="preview-label">Live Preview</div>
+          <div class="prev-card">
+            <div class="prev-head">
+              <div class="prev-icon-wrap">
+                <div class="prev-icon" id="prevIcon">🎉</div>
+                <div>
+                  <div class="prev-title" id="prevTitle">Your countdown title</div>
+                  <div class="prev-date" id="prevDate">Set a target date to begin</div>
+                </div>
+              </div>
+              <span class="badge badge-neutral" id="prevBadge">Personal</span>
+            </div>
+            <div class="prev-display">
+              <div class="countdown-display" id="prevCountdown">
+                <div class="cd-unit"><span class="cd-val" id="pvD">--</span><span class="cd-lbl">Days</span></div>
+                <span class="cd-sep">:</span>
+                <div class="cd-unit"><span class="cd-val" id="pvH">--</span><span class="cd-lbl">Hrs</span></div>
+                <span class="cd-sep">:</span>
+                <div class="cd-unit"><span class="cd-val" id="pvM">--</span><span class="cd-lbl">Min</span></div>
+                <span class="cd-sep">:</span>
+                <div class="cd-unit"><span class="cd-val" id="pvS">--</span><span class="cd-lbl">Sec</span></div>
+              </div>
+            </div>
+            <div class="prev-foot">
+              <span style="font-size:0.75rem;color:var(--ink-mute)" id="prevVis">🔒 Private</span>
+              <div class="flex gap-8">
+                <button class="btn btn-ghost btn-sm" disabled style="opacity:0.45">Share</button>
+                <button class="btn btn-primary btn-sm" disabled style="opacity:0.45">Edit</button>
+              </div>
+            </div>
+          </div>
+          <!-- CHECKLIST -->
+          <div class="checklist">
+            <div class="checklist-title">Ready to create?</div>
+            <div class="check-item" id="chk-title">
+              <div class="check-dot" id="chk-title-dot"></div>
+              <span class="check-text" id="chk-title-text">Add a title</span>
+            </div>
+            <div class="check-item" id="chk-date">
+              <div class="check-dot" id="chk-date-dot"></div>
+              <span class="check-text" id="chk-date-text">Set a future date</span>
+            </div>
+            <div class="check-item" id="chk-cat">
+              <div class="check-dot" id="chk-cat-dot" class="done"></div>
+              <span class="check-text done" id="chk-cat-text">Category chosen ✓</span>
+            </div>
+            <div class="check-item" id="chk-vis">
+              <div class="check-dot done" id="chk-vis-dot"></div>
+              <span class="check-text done" id="chk-vis-text">Visibility set ✓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let currentUser = null;
+  let selectedEmoji = '🎉';
+  let selectedColor = '#c5892e';
+  let previewTimer = null;
+
+  // Auth
+  onAuthStateChanged(auth, user => {
+    currentUser = user;
+    if (user) {
+      const initials = (user.displayName || user.email || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+      document.getElementById('navAvatar').textContent = initials;
+    }
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', () => {
+    signOut(auth).then(() => window.location.href = 'account.html');
+  });
+
+  document.getElementById('sidebarToggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // Char counters
+  function bindCounter(inputId, counterId, max) {
+    const el = document.getElementById(inputId);
+    const ctr = document.getElementById(counterId);
+    el.addEventListener('input', () => {
+      const len = el.value.length;
+      ctr.textContent = `${len} / ${max}`;
+      ctr.className = 'char-counter' + (len > max * 0.9 ? ' near' : '') + (len >= max ? ' over' : '');
+    });
+  }
+  bindCounter('titleInput', 'titleCounter', 60);
+  bindCounter('descInput', 'descCounter', 200);
+
+  // Pad number
+  function pad(n, len = 2) { return String(Math.max(0, n)).padStart(len, '0'); }
+
+  // Preview countdown timer
+  function startPreview() {
+    if (previewTimer) clearInterval(previewTimer);
+    previewTimer = setInterval(updatePreview, 1000);
+    updatePreview();
+  }
+
+  function updatePreview() {
+    const dateVal = document.getElementById('dateInput').value;
+    const timeVal = document.getElementById('timeInput').value || '00:00';
+    if (!dateVal) {
+      ['pvD','pvH','pvM','pvS'].forEach(id => document.getElementById(id).textContent = '--');
+      document.getElementById('prevDate').textContent = 'Set a target date to begin';
+      return;
+    }
+    const target = new Date(`${dateVal}T${timeVal}:00`).getTime();
+    const diff = Math.max(0, target - Date.now());
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('pvD').textContent = pad(d, d > 99 ? 3 : 2);
+    document.getElementById('pvH').textContent = pad(h);
+    document.getElementById('pvM').textContent = pad(m);
+    document.getElementById('pvS').textContent = pad(s);
+    document.getElementById('prevDate').textContent = new Date(`${dateVal}T${timeVal}`).toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' });
+    updateChecklist();
+  }
+
+  // Title preview
+  document.getElementById('titleInput').addEventListener('input', e => {
+    const val = e.target.value.trim();
+    document.getElementById('prevTitle').textContent = val || 'Your countdown title';
+    updateChecklist();
+    clearError('titleInput', 'titleHint', 'What are you counting down to?');
+  });
+
+  // Date/time preview
+  document.getElementById('dateInput').addEventListener('change', () => { startPreview(); clearError('dateInput', 'dateHint', 'Must be a future date'); });
+  document.getElementById('timeInput').addEventListener('change', startPreview);
+
+  // Category badge
+  const catBadgeMap = { Personal:'badge-neutral', Work:'badge-blue', Birthday:'badge-gold', Holiday:'badge-gold', Sports:'badge-green', Travel:'badge-blue', Event:'badge-orange', Milestone:'badge-gold', Education:'badge-neutral', Other:'badge-neutral' };
+  document.getElementById('catSelect').addEventListener('change', e => {
+    const badge = document.getElementById('prevBadge');
+    badge.textContent = e.target.value;
+    badge.className = 'badge ' + (catBadgeMap[e.target.value] || 'badge-neutral');
+    markCheck('chk-cat-dot', 'chk-cat-text', 'Category chosen ✓');
+  });
+
+  // Emoji grid
+  document.getElementById('emojiGrid').addEventListener('click', e => {
+    const btn = e.target.closest('.emoji-btn');
+    if (!btn) return;
+    document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+    selectedEmoji = btn.dataset.emoji;
+    document.getElementById('prevIcon').textContent = selectedEmoji;
+  });
+
+  // Color swatches
+  document.getElementById('colorRow').addEventListener('click', e => {
+    const sw = e.target.closest('.color-swatch');
+    if (!sw) return;
+    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('sel'));
+    sw.classList.add('sel');
+    selectedColor = sw.dataset.color;
+    document.getElementById('prevIcon').style.background = selectedColor + '22';
+  });
+
+  // Visibility
+  document.querySelectorAll('input[name="visibility"]').forEach(r => {
+    r.addEventListener('change', () => {
+      const pub = document.querySelector('input[name="visibility"]:checked').value === 'public';
+      document.getElementById('prevVis').textContent = pub ? '🌐 Public' : '🔒 Private';
+      markCheck('chk-vis-dot', 'chk-vis-text', 'Visibility set ✓');
+    });
+  });
+
+  // Notification toggle
+  document.getElementById('notifToggle').addEventListener('change', e => {
+    document.getElementById('notifOptions').style.display = e.target.checked ? 'block' : 'none';
+  });
+
+  // Checklist helpers
+  function markCheck(dotId, textId, label) {
+    document.getElementById(dotId).classList.add('done');
+    document.getElementById(textId).textContent = label;
+    document.getElementById(textId).classList.add('done');
+  }
+  function updateChecklist() {
+    const hasTitle = document.getElementById('titleInput').value.trim().length > 0;
+    const dateVal = document.getElementById('dateInput').value;
+    const hasFutureDate = dateVal && new Date(`${dateVal}T00:00`) > new Date();
+    if (hasTitle) markCheck('chk-title-dot', 'chk-title-text', 'Title added ✓');
+    else { document.getElementById('chk-title-dot').classList.remove('done'); document.getElementById('chk-title-text').textContent = 'Add a title'; document.getElementById('chk-title-text').classList.remove('done'); }
+    if (hasFutureDate) markCheck('chk-date-dot', 'chk-date-text', 'Date set ✓');
+    else { document.getElementById('chk-date-dot').classList.remove('done'); document.getElementById('chk-date-text').textContent = 'Set a future date'; document.getElementById('chk-date-text').classList.remove('done'); }
+  }
+
+  // Error helpers
+  function showError(inputId, hintId, msg) {
+    document.getElementById(inputId).classList.add('is-error');
+    const h = document.getElementById(hintId);
+    h.textContent = msg; h.classList.add('error');
+  }
+  function clearError(inputId, hintId, defaultMsg) {
+    document.getElementById(inputId).classList.remove('is-error');
+    const h = document.getElementById(hintId);
+    h.textContent = defaultMsg; h.classList.remove('error');
+  }
+
+  // Toast
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = `toast ${type} show`;
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // Submit
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    const title = document.getElementById('titleInput').value.trim();
+    const dateVal = document.getElementById('dateInput').value;
+    const timeVal = document.getElementById('timeInput').value || '00:00';
+    let valid = true;
+
+    if (!title) { showError('titleInput', 'titleHint', 'Please enter a title for your countdown'); valid = false; }
+    if (!dateVal) { showError('dateInput', 'dateHint', 'Please choose a target date'); valid = false; }
+    else if (new Date(`${dateVal}T${timeVal}:00`) <= new Date()) { showError('dateInput', 'dateHint', 'Target date must be in the future'); valid = false; }
+    if (!valid) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" style="animation:spin 0.8s linear infinite"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.18-3.69"/></svg> Saving…';
+
+    const item = {
+      title,
+      description: document.getElementById('descInput').value.trim(),
+      targetDate: `${dateVal}T${timeVal}:00`,
+      category: document.getElementById('catSelect').value,
+      emoji: selectedEmoji,
+      color: selectedColor,
+      timezone: document.getElementById('tzSelect').value,
+      isPublic: document.querySelector('input[name="visibility"]:checked').value === 'public',
+      notifyEnabled: document.getElementById('notifToggle').checked,
+      notifyBefore: parseInt(document.getElementById('notifWhen').value),
+      userId: currentUser ? currentUser.uid : 'demo',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    };
+
+    try {
+      if (currentUser) {
+        await addDoc(collection(db, 'countdowns'), item);
+      }
+      showToast('🎉 Countdown created successfully!', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 1200);
+    } catch (err) {
+      console.error(err);
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Create countdown';
+      showToast('Failed to save. Please try again.', 'error-t');
+    }
+  });
+
+  // Init
+  startPreview();
+  updateChecklist();
+  markCheck('chk-cat-dot', 'chk-cat-text', 'Category chosen ✓');
+  markCheck('chk-vis-dot', 'chk-vis-text', 'Visibility set ✓');
+</script>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+</body>
+</html>
