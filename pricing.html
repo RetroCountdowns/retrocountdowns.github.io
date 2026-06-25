@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — RetroCountdowns</title>
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#1a1a27;--ink-soft:#4e4e5e;--ink-mute:#8b8b9b;--ink-faint:#c4c4d0;--gold:#c5892e;--gold-dark:#a06e1e;--gold-mid:#d99a40;--gold-light:#fef1d5;--gold-border:#f0d8a0;--gold-bg:rgba(197,137,46,0.07);--surface:#fafaf7;--surface-2:#f4f2eb;--surface-3:#ece9e0;--border:#e5e1d7;--border-soft:#edebe4;--white:#ffffff;--display-bg:#10101e;--display-amber:#e8a030;--display-glow:rgba(232,160,48,0.38);--display-dim:rgba(232,160,48,0.32);--green:#22935d;--green-bg:#e8f5ee;--red:#cc3d3d;--red-bg:#faeaea;--blue:#3474cc;--blue-bg:#eaf1fc;--orange:#d4731e;--orange-bg:#fef0e0;--r0:4px;--r1:8px;--r2:12px;--r3:16px;--r4:20px;--r5:28px;--r-full:9999px;--s1:0 1px 2px rgba(26,26,39,0.05);--s2:0 2px 8px rgba(26,26,39,0.07),0 1px 2px rgba(26,26,39,0.04);--s3:0 4px 16px rgba(26,26,39,0.09),0 2px 4px rgba(26,26,39,0.05);--s4:0 8px 32px rgba(26,26,39,0.11),0 4px 8px rgba(26,26,39,0.05);--s5:0 20px 60px rgba(26,26,39,0.14);--s-gold:0 8px 28px rgba(197,137,46,0.22);--ff-display:'DM Serif Display',Georgia,serif;--ff-body:'Inter',system-ui,sans-serif;--ff-mono:'Space Mono','Courier New',monospace;--ease:cubic-bezier(.4,0,.2,1);--t1:140ms;--t2:220ms;--t3:340ms;--nav-h:68px;--max-w:1220px;--sidebar-w:252px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    body{font-family:var(--ff-body);background:var(--white);color:var(--ink);line-height:1.65;font-size:16px}
+    img,svg{display:block;max-width:100%}
+    a{color:inherit;text-decoration:none}
+    ul,ol{list-style:none}
+    button{cursor:pointer;border:none;background:none;font-family:inherit}
+    input,select,textarea{font-family:inherit;color:var(--ink)}
+    .c{width:100%;max-width:var(--max-w);margin:0 auto;padding:0 28px}
+    .t-hero{font-family:var(--ff-display);font-size:clamp(2.6rem,5.5vw,4.8rem);line-height:1.06;letter-spacing:-.025em}
+    .t-h1{font-family:var(--ff-display);font-size:clamp(2rem,4vw,3.4rem);line-height:1.1;letter-spacing:-.02em}
+    .t-h2{font-family:var(--ff-display);font-size:clamp(1.6rem,3vw,2.6rem);line-height:1.15;letter-spacing:-.015em}
+    .t-h3{font-family:var(--ff-display);font-size:clamp(1.25rem,2.5vw,1.8rem);line-height:1.25}
+    .t-h4{font-size:1.05rem;font-weight:700;line-height:1.3}
+    .t-lg{font-size:1.125rem;line-height:1.7}
+    .t-sm{font-size:0.875rem}
+    .t-xs{font-size:0.75rem}
+    .t-gold{color:var(--gold)}
+    .t-mute{color:var(--ink-mute)}
+    .t-soft{color:var(--ink-soft)}
+    .t-center{text-align:center}
+    .w-600{font-weight:600}
+    .w-700{font-weight:700}
+    .mt-4{margin-top:4px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}.mt-24{margin-top:24px}.mt-32{margin-top:32px}.mt-48{margin-top:48px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:var(--r2);font-size:0.9375rem;font-weight:600;line-height:1;white-space:nowrap;transition:all var(--t2) var(--ease);cursor:pointer;border:1.5px solid transparent}
+    .btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+    .btn-primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .btn-primary:hover{background:#2a2a3a;transform:translateY(-1px);box-shadow:var(--s3)}
+    .btn-gold{background:var(--gold);color:#fff;border-color:var(--gold)}
+    .btn-gold:hover{background:var(--gold-dark);border-color:var(--gold-dark);transform:translateY(-1px);box-shadow:var(--s-gold)}
+    .btn-outline{background:transparent;color:var(--ink);border-color:var(--border)}
+    .btn-outline:hover{border-color:var(--ink);background:var(--surface)}
+    .btn-ghost{background:transparent;color:var(--ink-soft);border-color:transparent}
+    .btn-ghost:hover{background:var(--surface-2);color:var(--ink)}
+    .btn-sm{padding:7px 15px;font-size:0.8125rem;border-radius:var(--r1)}
+    .btn-lg{padding:13px 26px;font-size:1rem}
+    .btn-xl{padding:15px 30px;font-size:1.0625rem;border-radius:var(--r3)}
+    .btn-full{width:100%}
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:var(--r-full);font-size:0.72rem;font-weight:700;letter-spacing:.03em;line-height:1.5}
+    .badge-gold{background:var(--gold-light);color:var(--gold-dark)}
+    .badge-dark{background:var(--ink);color:#fff}
+    .badge-green{background:var(--green-bg);color:var(--green)}
+    .badge-neutral{background:var(--surface-3);color:var(--ink-soft)}
+    .card{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);box-shadow:var(--s2);overflow:hidden}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:0.775rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+    .eyebrow::before{content:'';display:block;width:18px;height:2px;background:currentColor;border-radius:1px}
+    .site-header{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(255,255,255,0.96);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border-soft)}
+    .nav-inner{display:flex;align-items:center;height:var(--nav-h)}
+    .nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:0.9375rem;color:var(--ink);margin-right:auto;flex-shrink:0}
+    .nav-brand img{width:34px;height:34px;border-radius:var(--r1)}
+    .nav-links-wrap{display:flex;align-items:center;gap:2px;margin:0 18px}
+    .nav-link{padding:7px 14px;border-radius:var(--r1);font-size:0.9rem;font-weight:500;color:var(--ink-soft);transition:all var(--t1) var(--ease)}
+    .nav-link:hover,.nav-link.active{color:var(--ink);background:var(--surface-2)}
+    .nav-actions{display:flex;align-items:center;gap:8px}
+    .nav-toggle-btn{display:none;flex-direction:column;gap:5.5px;padding:8px;border-radius:var(--r1)}
+    .nav-toggle-btn span{width:22px;height:2px;background:var(--ink);border-radius:1px;display:block;transition:all var(--t1) var(--ease)}
+    .site-footer{background:var(--surface);border-top:1px solid var(--border);padding:72px 0 36px}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:52px}
+    .footer-brand-block .f-logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:0.9375rem;color:var(--ink);margin-bottom:14px}
+    .footer-brand-block .f-logo img{width:26px;height:26px;border-radius:var(--r0)}
+    .footer-brand-block p{font-size:0.875rem;color:var(--ink-mute);line-height:1.65;max-width:250px}
+    .footer-col h5{font-size:0.775rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink);margin-bottom:16px}
+    .footer-links{display:flex;flex-direction:column;gap:10px}
+    .footer-links a{font-size:0.875rem;color:var(--ink-mute);transition:color var(--t1) var(--ease)}
+    .footer-links a:hover{color:var(--ink)}
+    .footer-bottom{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:56px;padding-top:24px;border-top:1px solid var(--border-soft)}
+    .footer-bottom p{font-size:0.8125rem;color:var(--ink-mute)}
+    .f-legal{display:flex;gap:24px}
+    .f-legal a{font-size:0.8125rem;color:var(--ink-mute);transition:color var(--t1) var(--ease)}
+    .f-legal a:hover{color:var(--ink)}
+    .flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}
+    @media(max-width:800px){
+      .nav-links-wrap{display:none;flex-direction:column;gap:2px;position:absolute;top:var(--nav-h);left:0;right:0;z-index:99;background:var(--white);border-bottom:1px solid var(--border);padding:10px 16px;margin:0}
+      .nav-links-wrap.open{display:flex}
+      .nav-links-wrap .nav-link{padding:11px 16px;width:100%;border-radius:var(--r2)}
+      .nav-toggle-btn{display:flex}
+      .nav-actions .btn-ghost{display:none}
+    }
+    @media(max-width:640px){
+      .c{padding:0 18px}
+      .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+      .footer-brand-block{grid-column:1 / -1}
+    }
+    @media(max-width:400px){.footer-grid{grid-template-columns:1fr}}
+
+    /* ── PRICING PAGE STYLES ── */
+    .pricing-hero{padding:80px 0 64px;text-align:center;background:linear-gradient(180deg,var(--surface) 0%,var(--white) 100%)}
+    .pricing-hero .eyebrow{justify-content:center;margin-bottom:18px}
+    .pricing-hero .eyebrow::before{display:none}
+    .pricing-hero .t-h1{margin-bottom:16px}
+    .pricing-hero .t-lg{color:var(--ink-soft);max-width:520px;margin:0 auto 32px}
+
+    /* Billing toggle */
+    .billing-row{display:flex;align-items:center;justify-content:center;gap:14px}
+    .billing-label{font-size:0.9375rem;font-weight:600;color:var(--ink-mute);transition:color var(--t1) var(--ease)}
+    .billing-label.on{color:var(--ink)}
+    .billing-save{display:inline-flex;align-items:center;background:var(--green-bg);color:var(--green);font-size:0.68rem;font-weight:700;letter-spacing:.04em;padding:2px 7px;border-radius:var(--r-full);margin-left:7px;vertical-align:middle;opacity:0;transition:opacity var(--t2) var(--ease)}
+    .billing-save.show{opacity:1}
+    .bill-switch{position:relative;width:48px;height:26px;cursor:pointer;flex-shrink:0;display:block}
+    .bill-switch input{opacity:0;width:0;height:0;position:absolute}
+    .bill-track{position:absolute;inset:0;background:var(--border);border-radius:var(--r-full);transition:background var(--t1) var(--ease)}
+    .bill-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.2);transition:left var(--t1) var(--ease)}
+    .bill-switch input:checked+.bill-track{background:var(--gold)}
+    .bill-switch input:checked~.bill-thumb{left:25px}
+
+    /* Plans grid */
+    .plans-section{padding:60px 0 80px}
+    .plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
+    .plan-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r4);padding:30px 26px;box-shadow:var(--s2);position:relative;transition:box-shadow var(--t2) var(--ease)}
+    .plan-card:hover{box-shadow:var(--s4)}
+    .plan-featured{border-color:var(--gold);box-shadow:var(--s3),0 0 0 1px rgba(197,137,46,0.25)}
+    .plan-pop-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;font-size:0.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:5px 14px;border-radius:var(--r-full);white-space:nowrap;box-shadow:0 2px 8px rgba(197,137,46,0.35)}
+    .plan-tier{font-size:0.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;color:var(--ink-mute)}
+    .plan-tier.gold{color:var(--gold-dark)}
+    .plan-tier.dark{color:var(--ink)}
+    .plan-price-row{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+    .plan-dollar{font-size:1.4rem;font-weight:700;color:var(--ink);margin-top:6px}
+    .plan-amount{font-family:var(--ff-display);font-size:3.2rem;line-height:1;color:var(--ink)}
+    .plan-period{font-size:0.875rem;color:var(--ink-mute);font-weight:500;margin-bottom:2px}
+    .plan-sub{font-size:0.8rem;color:var(--ink-mute);margin-bottom:22px;min-height:20px}
+    .plan-tagline{font-size:0.875rem;color:var(--ink-soft);margin-bottom:22px;font-style:italic}
+    .plan-divider{border:none;border-top:1px solid var(--border-soft);margin:22px 0}
+    .plan-features{display:flex;flex-direction:column;gap:0;margin-top:4px}
+    .pf-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;font-size:0.875rem;border-bottom:1px solid var(--border-soft)}
+    .pf-item:last-child{border-bottom:none}
+    .pf-check{width:18px;height:18px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px}
+    .pf-yes .pf-check{background:var(--green-bg)}
+    .pf-no .pf-check{background:var(--surface-3)}
+    .pf-no{color:var(--ink-mute)}
+    .pf-yes .pf-check::after{content:'';width:9px;height:7px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='7' viewBox='0 0 9 7' fill='none'%3E%3Cpolyline points='1 3.5 3.5 6 8 1' stroke='%2322935d' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center;display:block}
+    .pf-no .pf-check::after{content:'–';font-size:0.75rem;font-weight:700;color:var(--ink-mute);line-height:1}
+
+    /* Comparison table */
+    .compare-section{padding:64px 0;background:var(--surface)}
+    .compare-section .section-hdr{text-align:center;margin-bottom:44px}
+    .compare-section .section-hdr .eyebrow{justify-content:center;margin-bottom:12px}
+    .compare-section .section-hdr .eyebrow::before{display:none}
+    .ct-wrap{overflow-x:auto;border-radius:var(--r3);border:1px solid var(--border);box-shadow:var(--s2);background:var(--white)}
+    .compare-tbl{width:100%;border-collapse:collapse}
+    .compare-tbl thead th{padding:16px 20px;font-size:0.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-align:center;color:var(--ink-soft);border-bottom:1.5px solid var(--border)}
+    .compare-tbl thead th.ct-feat{text-align:left;color:var(--ink)}
+    .compare-tbl thead .ct-hi{background:rgba(254,241,213,0.6);color:var(--gold-dark)}
+    .compare-tbl tbody td{padding:13px 20px;font-size:0.875rem;text-align:center;color:var(--ink);border-bottom:1px solid var(--border-soft)}
+    .compare-tbl tbody td.ct-feat{text-align:left;font-weight:500;color:var(--ink)}
+    .compare-tbl tbody .ct-hi{background:rgba(254,241,213,0.25)}
+    .compare-tbl tbody tr:last-child td{border-bottom:none}
+    .compare-tbl tbody tr:hover td{background:var(--surface)}
+    .compare-tbl tbody tr:hover .ct-hi{background:rgba(254,241,213,0.4)}
+    .ct-yes{color:var(--green);font-size:1rem;font-weight:700}
+    .ct-no{color:var(--ink-faint);font-size:1rem}
+    .ct-val{font-weight:700;font-size:0.8rem;color:var(--ink)}
+
+    /* FAQ */
+    .faq-section{padding:80px 0}
+    .faq-section .section-hdr{text-align:center;margin-bottom:48px}
+    .faq-section .section-hdr .eyebrow{justify-content:center;margin-bottom:12px}
+    .faq-section .section-hdr .eyebrow::before{display:none}
+    .faq-list{max-width:720px;margin:0 auto}
+    .faq-item{border-top:1px solid var(--border)}
+    .faq-item:last-child{border-bottom:1px solid var(--border)}
+    .faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;font-size:0.9875rem;font-weight:600;color:var(--ink);text-align:left;cursor:pointer;background:none;border:none;font-family:inherit;transition:color var(--t1) var(--ease)}
+    .faq-q:hover{color:var(--gold)}
+    .faq-icon{width:18px;height:18px;flex-shrink:0;stroke:currentColor;transition:transform var(--t2) var(--ease)}
+    .faq-item.open .faq-icon{transform:rotate(180deg)}
+    .faq-body{overflow:hidden;max-height:0;transition:max-height var(--t3) var(--ease)}
+    .faq-item.open .faq-body{max-height:400px}
+    .faq-body p{padding:0 0 20px;font-size:0.9375rem;color:var(--ink-soft);line-height:1.75}
+
+    /* CTA */
+    .section-cta{padding:80px 0}
+    .cta-box{background:var(--ink);border-radius:var(--r5);padding:72px 56px;text-align:center;position:relative;overflow:hidden}
+    .cta-box::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(ellipse,rgba(197,137,46,0.2) 0%,transparent 70%)}
+    .cta-box::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(ellipse,rgba(197,137,46,0.12) 0%,transparent 70%)}
+    .cta-inner{position:relative;z-index:1}
+    .cta-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:0.775rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-mid);margin-bottom:20px}
+    .cta-eyebrow::before{content:'';display:block;width:18px;height:2px;background:currentColor;border-radius:1px}
+    .cta-heading{font-family:var(--ff-display);font-size:clamp(2rem,4vw,3.2rem);line-height:1.1;color:#fff;margin-bottom:16px;letter-spacing:-.02em}
+    .cta-sub{font-size:1.0625rem;color:rgba(255,255,255,0.6);margin-bottom:36px;line-height:1.65;max-width:500px;margin-left:auto;margin-right:auto}
+    .cta-actions{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+    .cta-note{font-size:0.8125rem;color:rgba(255,255,255,0.4);margin-top:20px}
+
+    /* Quote */
+    .quote-section{padding:64px 0;border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)}
+    .quote-inner{max-width:680px;margin:0 auto;text-align:center}
+    .quote-text{font-family:var(--ff-display);font-size:clamp(1.3rem,2.5vw,1.9rem);line-height:1.4;color:var(--ink);font-style:italic;margin-bottom:24px}
+    .quote-attr{display:flex;align-items:center;justify-content:center;gap:12px}
+    .quote-avatar{width:42px;height:42px;border-radius:50%;background:var(--blue-bg);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.875rem;flex-shrink:0}
+    .quote-name{font-weight:700;font-size:0.875rem;text-align:left}
+    .quote-role{font-size:0.775rem;color:var(--ink-mute);margin-top:2px}
+
+    @media(max-width:900px){.plans-grid{grid-template-columns:1fr;max-width:480px;margin:0 auto}}
+    @media(max-width:640px){
+      .pricing-hero{padding:56px 0 48px}
+      .cta-box{padding:52px 28px;border-radius:var(--r4)}
+      .section-cta,.faq-section,.plans-section{padding:56px 0}
+    }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="c">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <img src="/logo.png" alt="RetroCountdowns" width="34" height="34" onerror="this.style.visibility='hidden'">
+        RetroCountdowns
+      </a>
+      <nav class="nav-links-wrap" id="navMenu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="create_item.html" class="nav-link">Create</a>
+        <a href="pricing.html" class="nav-link active">Pricing</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="account.html" class="btn btn-ghost btn-sm">Sign in</a>
+        <a href="account.html" class="btn btn-primary btn-sm">Get started</a>
+      </div>
+      <button class="nav-toggle-btn" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="pricing-hero">
+    <div class="c">
+      <span class="eyebrow">Transparent pricing</span>
+      <h1 class="t-h1 mt-16">Simple plans, no surprises.</h1>
+      <p class="t-lg mt-16">Start free and scale only when you need to. Every plan includes world clocks, live countdowns, and your personal dashboard.</p>
+      <div class="billing-row">
+        <span class="billing-label on" id="lblMonthly">Monthly</span>
+        <label class="bill-switch" aria-label="Toggle annual billing">
+          <input type="checkbox" id="billingToggle">
+          <span class="bill-track"></span>
+          <span class="bill-thumb"></span>
+        </label>
+        <span class="billing-label" id="lblAnnual">
+          Annual
+          <span class="billing-save" id="saveBadge">Save 28%</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANS -->
+  <section class="plans-section">
+    <div class="c">
+      <div class="plans-grid">
+
+        <!-- FREE -->
+        <div class="plan-card">
+          <div class="plan-tier">Free</div>
+          <div class="plan-price-row">
+            <span class="plan-dollar">$</span>
+            <span class="plan-amount" data-monthly="0" data-annual="0">0</span>
+          </div>
+          <div class="plan-period">/month</div>
+          <div class="plan-sub" id="free-sub">&nbsp;</div>
+          <p class="plan-tagline">Perfect to get started.</p>
+          <a href="account.html" class="btn btn-outline btn-full">Get started free</a>
+          <hr class="plan-divider">
+          <ul class="plan-features">
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Create up to 5 countdowns</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Edit countdowns</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Backup & export data</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>World clocks (5 cities)</li>
+            <li class="pf-item pf-no"><span class="pf-check"></span>Delete countdowns</li>
+            <li class="pf-item pf-no"><span class="pf-check"></span>Custom account theme</li>
+            <li class="pf-item pf-no"><span class="pf-check"></span>Priority support</li>
+            <li class="pf-item pf-no"><span class="pf-check"></span>Backup themes</li>
+            <li class="pf-item pf-no"><span class="pf-check"></span>Custom fonts</li>
+            <li class="pf-item pf-no"><span class="pf-check"></span>Personal site page</li>
+          </ul>
+        </div>
+
+        <!-- PREMIUM (featured) -->
+        <div class="plan-card plan-featured">
+          <div class="plan-pop-badge">Most Popular</div>
+          <div class="plan-tier gold">Premium</div>
+          <div class="plan-price-row">
+            <span class="plan-dollar">$</span>
+            <span class="plan-amount" data-monthly="7" data-annual="5">7</span>
+          </div>
+          <div class="plan-period">/month</div>
+          <div class="plan-sub" id="prem-sub"><span id="prem-annual-note" style="display:none">Billed $60/year</span>&nbsp;</div>
+          <p class="plan-tagline">For individuals who mean business.</p>
+          <a href="account.html" class="btn btn-gold btn-full">Start 14-day free trial</a>
+          <hr class="plan-divider">
+          <ul class="plan-features">
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Create up to 50 countdowns</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Edit countdowns</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Backup & export data</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>World clocks (unlimited)</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Delete countdowns</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Custom account theme</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Priority support</li>
+            <li class="pf-item pf-no"><span class="pf-check"></span>Backup themes</li>
+            <li class="pf-item pf-no"><span class="pf-check"></span>Custom fonts</li>
+            <li class="pf-item pf-no"><span class="pf-check"></span>Personal site page</li>
+          </ul>
+        </div>
+
+        <!-- MASTER -->
+        <div class="plan-card">
+          <div class="plan-tier dark">Master</div>
+          <div class="plan-price-row">
+            <span class="plan-dollar">$</span>
+            <span class="plan-amount" data-monthly="19" data-annual="14">19</span>
+          </div>
+          <div class="plan-period">/month</div>
+          <div class="plan-sub" id="master-sub"><span id="master-annual-note" style="display:none">Billed $168/year</span>&nbsp;</div>
+          <p class="plan-tagline">Full creative control, your identity.</p>
+          <a href="account.html" class="btn btn-primary btn-full">Start 14-day free trial</a>
+          <hr class="plan-divider">
+          <ul class="plan-features">
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Unlimited countdowns</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Edit countdowns</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Backup & export data</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>World clocks (unlimited)</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Delete countdowns</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Custom account theme</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Priority support</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Backup themes</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Custom fonts</li>
+            <li class="pf-item pf-yes"><span class="pf-check"></span>Personal site page</li>
+          </ul>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:0.8125rem;color:var(--ink-mute);margin-top:28px;">No credit card required for free trial &nbsp;·&nbsp; Cancel anytime &nbsp;·&nbsp; Secure payments via Stripe</p>
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section class="compare-section">
+    <div class="c">
+      <div class="section-hdr">
+        <span class="eyebrow">Compare plans</span>
+        <h2 class="t-h2 mt-12">Everything, side by side.</h2>
+      </div>
+      <div class="ct-wrap">
+        <table class="compare-tbl">
+          <thead>
+            <tr>
+              <th class="ct-feat">Feature</th>
+              <th>Free</th>
+              <th class="ct-hi">Premium</th>
+              <th>Master</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="ct-feat">Countdowns</td><td><span class="ct-val">5</span></td><td class="ct-hi"><span class="ct-val">50</span></td><td><span class="ct-val">Unlimited</span></td></tr>
+            <tr><td class="ct-feat">Edit items</td><td class="ct-yes">✓</td><td class="ct-hi ct-yes">✓</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feat">Backup & export data</td><td class="ct-yes">✓</td><td class="ct-hi ct-yes">✓</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feat">World clocks</td><td><span class="ct-val">5 cities</span></td><td class="ct-hi"><span class="ct-val">Unlimited</span></td><td><span class="ct-val">Unlimited</span></td></tr>
+            <tr><td class="ct-feat">Delete items</td><td class="ct-no">—</td><td class="ct-hi ct-yes">✓</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feat">Custom account theme</td><td class="ct-no">—</td><td class="ct-hi ct-yes">✓</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feat">Priority support</td><td class="ct-no">—</td><td class="ct-hi ct-yes">✓</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feat">Backup themes</td><td class="ct-no">—</td><td class="ct-hi ct-no">—</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feat">Custom fonts</td><td class="ct-no">—</td><td class="ct-hi ct-no">—</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feat">Personal site page <small style="font-weight:400;color:var(--ink-mute)">/{name}_retrocountdowns/</small></td><td class="ct-no">—</td><td class="ct-hi ct-no">—</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feat">Team sharing</td><td class="ct-no">—</td><td class="ct-hi ct-no">—</td><td class="ct-yes">✓</td></tr>
+            <tr><td class="ct-feat">14-day free trial</td><td class="ct-no">—</td><td class="ct-hi ct-yes">✓</td><td class="ct-yes">✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="quote-section">
+    <div class="c">
+      <div class="quote-inner">
+        <p class="quote-text">"RetroCountdowns changed how our team tracks product launches. The visual countdowns during our all-hands meetings are incredibly energizing — nothing gets people moving like a real-time timer."</p>
+        <div class="quote-attr">
+          <div class="quote-avatar">SC</div>
+          <div>
+            <div class="quote-name">Sarah Chen</div>
+            <div class="quote-role">Product Manager · Stripe</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section">
+    <div class="c">
+      <div class="section-hdr">
+        <span class="eyebrow">FAQ</span>
+        <h2 class="t-h2 mt-12">Questions answered.</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q">Can I switch between plans at any time?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-body"><p>Yes, absolutely. Upgrade or downgrade your plan at any moment from your account settings. Upgrades take effect immediately, and any unused credit is prorated toward your next billing cycle. Downgrades take effect at the end of your current period.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">What happens to my countdowns if I cancel or downgrade?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-body"><p>Your data is always safe with us. If you downgrade to the Free plan and have more countdowns than the limit allows, your older items will be archived — not deleted. They'll be fully restored the moment you upgrade again. We never delete user data without explicit confirmation from you.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Is there a free trial on paid plans?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-body"><p>Premium and Master plans include a 14-day free trial with no credit card required. You'll experience the full plan with zero restrictions. At the end of the trial, you'll be prompted to add a payment method to continue — or you'll automatically drop back to the Free plan with no charge.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">What exactly is the personal site page on the Master plan?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-body"><p>Master subscribers get a dedicated public page at <code style="background:var(--surface-2);padding:2px 6px;border-radius:4px;font-size:0.875em">/{your-username}_retrocountdowns/</code> — a personal hub where you can display your public countdowns, write a bio, add links, and curate a collection of live timers. It's your public identity on RetroCountdowns, styled with your custom theme and fonts.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">How do custom fonts work on Master?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-body"><p>Master plan users can choose from our curated library of 40+ premium typefaces — from elegant serifs to modern grotesks — to apply across their personal page, countdown cards, and embedded widgets. Your chosen font is saved to your theme so it travels consistently across every touchpoint of your RetroCountdowns presence.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">What does "backup themes" mean?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-body"><p>On the Master plan you can save multiple named theme configurations — color palettes, font choices, layout preferences — and switch between them or restore a previous look at any time. This is ideal if you maintain multiple projects or brand identities, or if you simply love experimenting and want a reliable fallback.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Do you offer discounts for annual billing?
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-body"><p>Yes — annual billing saves you over 28% on Premium (from $7 to $5/month) and over 26% on Master (from $19 to $14/month). Toggle the billing switch at the top of this page to see annual pricing. You can switch between monthly and annual from your billing settings at any time.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-cta">
+    <div class="c">
+      <div class="cta-box">
+        <div class="cta-inner">
+          <div class="cta-eyebrow">Get started today</div>
+          <h2 class="cta-heading">Start tracking what matters most.</h2>
+          <p class="cta-sub">Join 2.4 million people counting down to the moments that define them.</p>
+          <div class="cta-actions">
+            <a href="account.html" class="btn btn-gold btn-xl">Create your free account</a>
+            <a href="#" class="btn btn-xl" style="color:rgba(255,255,255,0.75);border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.06)">Talk to sales &rarr;</a>
+          </div>
+          <p class="cta-note">Free plan available · No credit card required</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="c">
+    <div class="footer-grid">
+      <div class="footer-brand-block">
+        <div class="f-logo"><img src="/logo.png" alt="" width="26" height="26" onerror="this.style.visibility='hidden'">RetroCountdowns</div>
+        <p>Beautiful countdown timers, world clocks, and event tracking for individuals and teams everywhere.</p>
+      </div>
+      <div class="footer-col"><h5>Product</h5><ul class="footer-links"><li><a href="#">Features</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="#">Embed</a></li><li><a href="#">API</a></li><li><a href="#">Changelog</a></li></ul></div>
+      <div class="footer-col"><h5>Resources</h5><ul class="footer-links"><li><a href="#">Documentation</a></li><li><a href="#">Blog</a></li><li><a href="#">Status</a></li><li><a href="#">Roadmap</a></li></ul></div>
+      <div class="footer-col"><h5>Company</h5><ul class="footer-links"><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 RetroCountdowns, Inc. All rights reserved.</p>
+      <div class="f-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Settings</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav
+  document.getElementById('navToggle').addEventListener('click',function(){
+    const m=document.getElementById('navMenu');
+    const o=m.classList.toggle('open');
+    this.setAttribute('aria-expanded',o);
+  });
+
+  // Billing toggle
+  const toggle=document.getElementById('billingToggle');
+  const lblM=document.getElementById('lblMonthly');
+  const lblA=document.getElementById('lblAnnual');
+  const saveBadge=document.getElementById('saveBadge');
+  toggle.addEventListener('change',function(){
+    const annual=this.checked;
+    lblM.classList.toggle('on',!annual);
+    lblA.classList.toggle('on',annual);
+    saveBadge.classList.toggle('show',annual);
+    document.querySelectorAll('.plan-amount').forEach(el=>{
+      el.textContent=annual?el.dataset.annual:el.dataset.monthly;
+    });
+    const premNote=document.getElementById('prem-annual-note');
+    const masterNote=document.getElementById('master-annual-note');
+    if(premNote) premNote.style.display=annual?'':'none';
+    if(masterNote) masterNote.style.display=annual?'':'none';
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      const item=this.closest('.faq-item');
+      const wasOpen=item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+      if(!wasOpen) item.classList.add('open');
+    });
+  });
+</script>
+</body>
+</html>
