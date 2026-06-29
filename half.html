@@ -1,0 +1,491 @@
+
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Half Year 2026</title>
+  <style>
+    :root{
+      --bg: rgba(0,0,0,0);
+      --text: #f5f7ff;
+
+      --c1: #6dfcff;
+      --c2: #ff6df2;
+      --c3: #ffe66d;
+      --c4: #7cff7a;
+
+      --mini1: #6dfcff;
+      --mini2: #ff9f6d;
+      --mini3: #b56dff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 20% 25%, rgba(0,255,255,.10), transparent 22%),
+        radial-gradient(circle at 80% 30%, rgba(255,0,230,.10), transparent 24%),
+        radial-gradient(circle at 50% 80%, rgba(255,255,0,.08), transparent 22%),
+        radial-gradient(circle at 35% 70%, rgba(0,255,120,.08), transparent 20%);
+      filter: blur(10px);
+      animation: drift 14s ease-in-out infinite alternate;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: .12;
+      animation: gridMove 22s linear infinite;
+      mask-image: radial-gradient(circle at center, black 35%, transparent 85%);
+    }
+
+    @keyframes drift {
+      0% { transform: translate3d(-2%, -1%, 0) scale(1); }
+      100% { transform: translate3d(2%, 1.5%, 0) scale(1.05); }
+    }
+
+    @keyframes gridMove {
+      from { transform: translate3d(0,0,0); }
+      to { transform: translate3d(80px,80px,0); }
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: 100vw;
+      height: 100vh;
+      padding: 3.2vw;
+      display: grid;
+      place-items: center;
+    }
+
+    .layout {
+      width: min(100%, 1700px);
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1.8fr 1fr;
+      gap: clamp(14px, 2vw, 28px);
+      align-items: stretch;
+    }
+
+    .left, .right {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: clamp(14px, 1.8vw, 24px);
+      padding: clamp(18px, 2.4vw, 34px);
+      border-radius: 34px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.04),
+        0 0 26px rgba(0,0,0,.25),
+        0 0 42px rgba(0,255,255,.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(2.4rem, 5.2vw, 6.4rem);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      line-height: 1;
+      text-shadow:
+        0 0 10px rgba(255,255,255,.45),
+        0 0 24px rgba(0,255,255,.28),
+        0 0 44px rgba(255,0,230,.16);
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 8px rgba(255,255,255,.18)); }
+      50% { transform: translateY(-1px); filter: drop-shadow(0 0 18px rgba(255,255,255,.40)); }
+    }
+
+    .sub {
+      font-size: clamp(.9rem, 1.35vw, 1.15rem);
+      opacity: .82;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-top: -8px;
+    }
+
+    .countdown-main {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(10px, 1.4vw, 18px);
+      align-items: stretch;
+    }
+
+    .unit {
+      position: relative;
+      padding: clamp(14px, 1.8vw, 24px);
+      border-radius: 24px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.14);
+      overflow: hidden;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.04),
+        0 0 22px rgba(0,0,0,.22);
+    }
+
+    .unit::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.10), transparent 40%, rgba(255,255,255,.06));
+      opacity: .55;
+      pointer-events: none;
+    }
+
+    .value {
+      display: block;
+      font-size: clamp(3rem, 8.5vw, 8rem);
+      font-weight: 900;
+      line-height: .92;
+      letter-spacing: .03em;
+      text-shadow:
+        0 0 8px currentColor,
+        0 0 18px currentColor,
+        0 0 38px color-mix(in srgb, currentColor 45%, transparent);
+    }
+
+    .label {
+      display: block;
+      margin-top: 10px;
+      font-size: clamp(.78rem, 1.1vw, .98rem);
+      font-weight: 800;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      opacity: .92;
+    }
+
+    .days { color: var(--c1); }
+    .hours { color: var(--c2); }
+    .minutes { color: var(--c3); }
+    .seconds { color: var(--c4); }
+
+    .right {
+      gap: clamp(12px, 1.4vw, 18px);
+      min-width: 0;
+    }
+
+    .mini {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      padding: clamp(14px, 1.6vw, 22px);
+      border-radius: 26px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.04),
+        0 0 22px rgba(0,0,0,.20);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+    }
+
+    .mini::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(255,255,255,.09), transparent 45%, rgba(255,255,255,.05));
+      opacity: .45;
+    }
+
+    .mini-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mini-title {
+      font-size: clamp(.9rem, 1.1vw, 1.15rem);
+      font-weight: 900;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      opacity: .95;
+    }
+
+    .mini-zone {
+      font-size: clamp(.9rem, 1.2vw, 1.2rem);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-shadow: 0 0 10px currentColor;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mini-box {
+      padding: 10px 8px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      text-align: center;
+    }
+
+    .mini-num {
+      display: block;
+      font-size: clamp(1.4rem, 2.8vw, 3rem);
+      font-weight: 900;
+      line-height: 1;
+      text-shadow:
+        0 0 7px currentColor,
+        0 0 16px currentColor;
+    }
+
+    .mini-lbl {
+      display: block;
+      margin-top: 5px;
+      font-size: .68rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      opacity: .85;
+    }
+
+    .mini1 { color: var(--mini1); }
+    .mini2 { color: var(--mini2); }
+    .mini3 { color: var(--mini3); }
+
+    .bottom-left {
+      position: fixed;
+      left: 18px;
+      bottom: 14px;
+      z-index: 2;
+      font-size: clamp(1rem, 2vw, 1.8rem);
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.96);
+      text-shadow: 0 0 8px rgba(255,255,255,.5), 0 0 20px rgba(0,255,255,.28);
+      padding: 8px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(8px);
+    }
+
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        min-height: 58vh;
+      }
+      .right {
+        min-height: 34vh;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .countdown-main {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .right {
+        gap: 10px;
+      }
+      .mini-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="layout">
+      <section class="left">
+        <div class="hero">
+          <h1 class="title">Half Year 2026</h1>
+          <div class="sub"></div>
+
+          <div class="countdown-main" aria-live="polite">
+            <div class="unit">
+              <span id="big-days" class="value days">00</span>
+              <span class="label days">Days</span>
+            </div>
+            <div class="unit">
+              <span id="big-hours" class="value hours">00</span>
+              <span class="label hours">Hours</span>
+            </div>
+            <div class="unit">
+              <span id="big-minutes" class="value minutes">00</span>
+              <span class="label minutes">Minutes</span>
+            </div>
+            <div class="unit">
+              <span id="big-seconds" class="value seconds">00</span>
+              <span class="label seconds">Seconds</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right" aria-label="Additional countdowns">
+        <div class="mini mini1">
+          <div class="mini-top">
+            <div class="mini-title">Samoa Time</div>
+            <div class="mini-zone">UTC+13</div>
+          </div>
+          <div class="mini-grid" aria-live="polite">
+            <div class="mini-box"><span id="a-days" class="mini-num mini1">00</span><span class="mini-lbl">Days</span></div>
+            <div class="mini-box"><span id="a-hours" class="mini-num mini1">00</span><span class="mini-lbl">Hours</span></div>
+            <div class="mini-box"><span id="a-minutes" class="mini-num mini1">00</span><span class="mini-lbl">Minutes</span></div>
+            <div class="mini-box"><span id="a-seconds" class="mini-num mini1">00</span><span class="mini-lbl">Seconds</span></div>
+          </div>
+        </div>
+
+        <div class="mini mini2">
+          <div class="mini-top">
+            <div class="mini-title">Chatcham Island Standard Time</div>
+            <div class="mini-zone">UTC+12.75</div>
+          </div>
+          <div class="mini-grid" aria-live="polite">
+            <div class="mini-box"><span id="b-days" class="mini-num mini2">00</span><span class="mini-lbl">Days</span></div>
+            <div class="mini-box"><span id="b-hours" class="mini-num mini2">00</span><span class="mini-lbl">Hours</span></div>
+            <div class="mini-box"><span id="b-minutes" class="mini-num mini2">00</span><span class="mini-lbl">Minutes</span></div>
+            <div class="mini-box"><span id="b-seconds" class="mini-num mini2">00</span><span class="mini-lbl">Seconds</span></div>
+          </div>
+        </div>
+
+        <div class="mini mini3">
+          <div class="mini-top">
+            <div class="mini-title">New Zealand Standard Time</div>
+            <div class="mini-zone">UTC+12</div>
+          </div>
+          <div class="mini-grid" aria-live="polite">
+            <div class="mini-box"><span id="c-days" class="mini-num mini3">00</span><span class="mini-lbl">Days</span></div>
+            <div class="mini-box"><span id="c-hours" class="mini-num mini3">00</span><span class="mini-lbl">Hours</span></div>
+            <div class="mini-box"><span id="c-minutes" class="mini-num mini3">00</span><span class="mini-lbl">Minutes</span></div>
+            <div class="mini-box"><span id="c-seconds" class="mini-num mini3">00</span><span class="mini-lbl">Seconds</span></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="bottom-left">UTC+14</div>
+
+  <script>
+    function targetForOffset(offsetHours) {
+      // 01.07.2026 00:00 w danej strefie = ta sama lokalna północ
+      return Date.UTC(2026, 6, 1, 0, 0, 0) - (offsetHours * 60 * 60 * 1000);
+    }
+
+    const targets = {
+      big: targetForOffset(14),
+      a: targetForOffset(13),
+      b: targetForOffset(12.75),
+      c: targetForOffset(12)
+    };
+
+    const els = {
+      big: {
+        days: document.getElementById('big-days'),
+        hours: document.getElementById('big-hours'),
+        minutes: document.getElementById('big-minutes'),
+        seconds: document.getElementById('big-seconds')
+      },
+      a: {
+        days: document.getElementById('a-days'),
+        hours: document.getElementById('a-hours'),
+        minutes: document.getElementById('a-minutes'),
+        seconds: document.getElementById('a-seconds')
+      },
+      b: {
+        days: document.getElementById('b-days'),
+        hours: document.getElementById('b-hours'),
+        minutes: document.getElementById('b-minutes'),
+        seconds: document.getElementById('b-seconds')
+      },
+      c: {
+        days: document.getElementById('c-days'),
+        hours: document.getElementById('c-hours'),
+        minutes: document.getElementById('c-minutes'),
+        seconds: document.getElementById('c-seconds')
+      }
+    };
+
+    const pad2 = (n) => String(n).padStart(2, '0');
+
+    function calc(target) {
+      let diff = target - Date.now();
+      if (diff < 0) diff = 0;
+
+      const days = Math.floor(diff / 86400000);
+      diff -= days * 86400000;
+
+      const hours = Math.floor(diff / 3600000);
+      diff -= hours * 3600000;
+
+      const minutes = Math.floor(diff / 60000);
+      diff -= minutes * 60000;
+
+      const seconds = Math.floor(diff / 1000);
+
+      return { days, hours, minutes, seconds };
+    }
+
+    function renderOne(group, target) {
+      const t = calc(target);
+      group.days.textContent = String(t.days).padStart(2, '0');
+      group.hours.textContent = pad2(t.hours);
+      group.minutes.textContent = pad2(t.minutes);
+      group.seconds.textContent = pad2(t.seconds);
+    }
+
+    function updateAll() {
+      renderOne(els.big, targets.big);
+      renderOne(els.a, targets.a);
+      renderOne(els.b, targets.b);
+      renderOne(els.c, targets.c);
+    }
+
+    updateAll();
+    setInterval(updateAll, 1000);
+  </script>
+</body>
+</html>
