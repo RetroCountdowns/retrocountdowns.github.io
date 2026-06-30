@@ -367,8 +367,8 @@
       <aside class="right" aria-label="Additional countdowns">
         <div class="mini mini1">
           <div class="mini-top">
-            <div class="mini-title">Eastern European Summer Time</div>
-            <div class="mini-zone">UTC+3</div>
+            <div class="mini-title">Central European Summer Time</div>
+            <div class="mini-zone">UTC+2</div>
           </div>
           <div class="mini-grid" aria-live="polite">
             <div class="mini-box"><span id="a-days" class="mini-num mini1">00</span><span class="mini-lbl">Days</span></div>
@@ -380,8 +380,8 @@
 
         <div class="mini mini2">
           <div class="mini-top">
-            <div class="mini-title">Central European Summer Time</div>
-            <div class="mini-zone">UTC+2</div>
+            <div class="mini-title">Western European Summer Time</div>
+            <div class="mini-zone">UTC+1</div>
           </div>
           <div class="mini-grid" aria-live="polite">
             <div class="mini-box"><span id="b-days" class="mini-num mini2">00</span><span class="mini-lbl">Days</span></div>
@@ -393,8 +393,8 @@
 
         <div class="mini mini3">
           <div class="mini-top">
-            <div class="mini-title">Western European Summer Time</div>
-            <div class="mini-zone">UTC+1</div>
+            <div class="mini-title">Azores Summer Time</div>
+            <div class="mini-zone">UTC+0</div>
           </div>
           <div class="mini-grid" aria-live="polite">
             <div class="mini-box"><span id="c-days" class="mini-num mini3">00</span><span class="mini-lbl">Days</span></div>
@@ -407,7 +407,7 @@
     </div>
   </div>
 
-  <div class="bottom-left">UTC+3.5</div>
+  <div class="bottom-left">UTC+3</div>
 
   <script>
     function targetForOffset(offsetHours) {
@@ -416,10 +416,10 @@
     }
 
     const targets = {
-      big: targetForOffset(3.5),
-      a: targetForOffset(3),
-      b: targetForOffset(2),
-      c: targetForOffset(1)
+      big: targetForOffset(3),
+      a: targetForOffset(2),
+      b: targetForOffset(1),
+      c: targetForOffset(0)
     };
 
     const els = {
