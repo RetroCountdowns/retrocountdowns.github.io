@@ -367,8 +367,8 @@
       <aside class="right" aria-label="Additional countdowns">
         <div class="mini mini1">
           <div class="mini-top">
-            <div class="mini-title">Brasília Time</div>
-            <div class="mini-zone">UTC-3</div>
+            <div class="mini-title">Eastern Daylight Time</div>
+            <div class="mini-zone">UTC-4</div>
           </div>
           <div class="mini-grid" aria-live="polite">
             <div class="mini-box"><span id="a-days" class="mini-num mini1">00</span><span class="mini-lbl">Days</span></div>
@@ -380,8 +380,8 @@
 
         <div class="mini mini2">
           <div class="mini-top">
-            <div class="mini-title">Eastern Daylight Time</div>
-            <div class="mini-zone">UTC-4</div>
+            <div class="mini-title">Central Daylight Time</div>
+            <div class="mini-zone">UTC-5</div>
           </div>
           <div class="mini-grid" aria-live="polite">
             <div class="mini-box"><span id="b-days" class="mini-num mini2">00</span><span class="mini-lbl">Days</span></div>
@@ -393,8 +393,8 @@
 
         <div class="mini mini3">
           <div class="mini-top">
-            <div class="mini-title">Central Daylight Time</div>
-            <div class="mini-zone">UTC-5</div>
+            <div class="mini-title">Mountain Daylight Time</div>
+            <div class="mini-zone">UTC-6</div>
           </div>
           <div class="mini-grid" aria-live="polite">
             <div class="mini-box"><span id="c-days" class="mini-num mini3">00</span><span class="mini-lbl">Days</span></div>
@@ -407,7 +407,7 @@
     </div>
   </div>
 
-  <div class="bottom-left">UTC-2.5</div>
+  <div class="bottom-left">UTC-3</div>
 
   <script>
     function targetForOffset(offsetHours) {
@@ -416,10 +416,10 @@
     }
 
     const targets = {
-      big: targetForOffset(-2.5),
-      a: targetForOffset(-3),
-      b: targetForOffset(-4),
-      c: targetForOffset(-5)
+      big: targetForOffset(-3),
+      a: targetForOffset(-4),
+      b: targetForOffset(-5),
+      c: targetForOffset(-6)
     };
 
     const els = {
