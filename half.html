@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Half Year 2026</title>
+  <title>Half Year 2027</title>
   <style>
     :root{
       --bg: rgba(0,0,0,0);
@@ -367,8 +367,8 @@
       <aside class="right" aria-label="Additional countdowns">
         <div class="mini mini1">
           <div class="mini-top">
-            <div class="mini-title">Hawaii-Aleutian Standard Time</div>
-            <div class="mini-zone">UTC-10</div>
+            <div class="mini-title">Samoa Time</div>
+            <div class="mini-zone">UTC+13</div>
           </div>
           <div class="mini-grid" aria-live="polite">
             <div class="mini-box"><span id="a-days" class="mini-num mini1">00</span><span class="mini-lbl">Days</span></div>
@@ -380,8 +380,8 @@
 
         <div class="mini mini2">
           <div class="mini-top">
-            <div class="mini-title">Niue Time</div>
-            <div class="mini-zone">UTC-11</div>
+            <div class="mini-title">Chatcham Island Standard Time</div>
+            <div class="mini-zone">UTC+12.75</div>
           </div>
           <div class="mini-grid" aria-live="polite">
             <div class="mini-box"><span id="b-days" class="mini-num mini2">00</span><span class="mini-lbl">Days</span></div>
@@ -393,8 +393,8 @@
 
         <div class="mini mini3">
           <div class="mini-top">
-            <div class="mini-title">Anywhere on Earth</div>
-            <div class="mini-zone">UTC-12</div>
+            <div class="mini-title">New Zealand Standard Time</div>
+            <div class="mini-zone">UTC+12</div>
           </div>
           <div class="mini-grid" aria-live="polite">
             <div class="mini-box"><span id="c-days" class="mini-num mini3">00</span><span class="mini-lbl">Days</span></div>
@@ -407,19 +407,19 @@
     </div>
   </div>
 
-  <div class="bottom-left">UTC-9.5</div>
+  <div class="bottom-left">UTC+14</div>
 
   <script>
     function targetForOffset(offsetHours) {
       // 01.07.2026 00:00 w danej strefie = ta sama lokalna północ
-      return Date.UTC(2026, 6, 1, 0, 0, 0) - (offsetHours * 60 * 60 * 1000);
+      return Date.UTC(2027, 6, 1, 0, 0, 0) - (offsetHours * 60 * 60 * 1000);
     }
 
     const targets = {
-      big: targetForOffset(-9.5),
-      a: targetForOffset(-10),
-      b: targetForOffset(-11),
-      c: targetForOffset(-12)
+      big: targetForOffset(14),
+      a: targetForOffset(13),
+      b: targetForOffset(12.75),
+      c: targetForOffset(12)
     };
 
     const els = {
